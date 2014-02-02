@@ -16,28 +16,32 @@ module mkSignedMultiplyN (MultiplyN#(n))
 
    // You need to implement guards and bodies for methods
    
-   method Action start(Bit#(n) aIn, Bit#(n) bIn) if ( i != 0) ;
+   method Action start(Bit#(n) aIn, Bit#(n) bIn) /* if ( i != 0) */ ;
       if (aIn[valueOf(n)-1] == 1)
          asign <= 1;
       if (bIn[valueOf(n)-1] == 1)
          bsign <= 1;
-      mul.start(aIn, bIn);
-/*      if (aIn>0 && bIn>0)
+      if (asign == 0 && bsign == 0)
          mul.start(aIn, bIn);
-	  else if (aIn>0 && bIn<0)
+	  else if (asign == 0 && bsign == 1)
          mul.start(aIn,-bIn);
-	  else if (aIn<0 && bIn>0)
+	  else if (asign == 1 && bsign == 0)
          mul.start(-aIn,bIn);
       else
          mul.start(-aIn,-bIn);
-*/
       i <= 0;
    endmethod
 
-   method Bit#(TAdd#(n,n)) result() if ( i == 0) ;
-      if ( asign^bsign == 0)
+   method Bit#(TAdd#(n,n)) result() /* if ( i == 0) */ ;
+      return (asign == bsign) ? mul.result : -mul.result;
+/*      if ( asign==0 && bsign == 0)
          return mul.result;
-	  else
+	  else if (asign == 0 && bsign == 1)
          return (~mul.result)+1;
+      else if (asign == 1 && bsign == 0)
+         return (~mul.result)+1;
+      else
+         return mul.result;
+*/
    endmethod 
 endmodule
