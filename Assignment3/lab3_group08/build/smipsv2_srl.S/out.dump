@@ -1,0 +1,301 @@
+
+build/smipsv2_srl.S/a.out:     file format elf32-bigmips
+
+Disassembly of section .text:
+
+00001000 <__start>:
+    1000:	27bdffe8 	addiu $sp,$sp,-24
+    1004:	afbf0010 	sw $ra,16($sp)
+    1008:	0c00042c 	jal 10b0 <main>
+    100c:	4082a800 	mtc0 $v0,$21
+    1010:	08000404 	j 1010 <__start+10>
+    1014:	00000000 	nop
+    1018:	00000000 	nop
+    101c:	00000000 	nop
+
+00001020 <printInt>:
+    1020:	40849000 	mtc0 $a0,$18
+    1024:	03e00008 	jr $ra
+    1028:	00000000 	nop
+
+0000102c <printChar>:
+    102c:	40849800 	mtc0 $a0,$19
+    1030:	03e00008 	jr $ra
+    1034:	00000000 	nop
+
+00001038 <printStr>:
+    1038:	27bdffe0 	addiu $sp,$sp,-32
+    103c:	afb00010 	sw $s0,16($sp)
+    1040:	00808021 	move $s0,$a0
+    1044:	afb20018 	sw $s2,24($sp)
+    1048:	24120018 	li $s2,24
+    104c:	afb10014 	sw $s1,20($sp)
+    1050:	241100ff 	li $s1,255
+    1054:	afbf001c 	sw $ra,28($sp)
+    1058:	8e020000 	lw $v0,0($s0)
+    105c:	32030003 	andi $v1,$s0,0x3
+    1060:	000318c0 	sll $v1,$v1,0x3
+    1064:	02431823 	subu $v1,$s2,$v1
+    1068:	00712004 	sllv $a0,$s1,$v1
+    106c:	00441024 	and $v0,$v0,$a0
+    1070:	00622006 	srlv $a0,$v0,$v1
+    1074:	10800003 	beqz $a0,1084 <printStr+4c>
+    1078:	0c00040b 	jal 102c <printChar>
+    107c:	26100001 	addiu $s0,$s0,1
+    1080:	08000416 	j 1058 <printStr+20>
+    1084:	8fbf001c 	lw $ra,28($sp)
+    1088:	8fb20018 	lw $s2,24($sp)
+    108c:	8fb10014 	lw $s1,20($sp)
+    1090:	8fb00010 	lw $s0,16($sp)
+    1094:	27bd0020 	addiu $sp,$sp,32
+    1098:	03e00008 	jr $ra
+    109c:	00000000 	nop
+
+000010a0 <getTime>:
+    10a0:	40025000 	mfc0 $v0,$10
+    10a4:	03e00008 	jr $ra
+
+000010a8 <getInsts>:
+    10a8:	40025800 	mfc0 $v0,$11
+    10ac:	03e00008 	jr $ra
+
+000010b0 <main>:
+    10b0:	3c028000 	lui $v0,0x8000
+    10b4:	00022002 	srl $a0,$v0,0x0
+    10b8:	3c1d8000 	lui $sp,0x8000
+    10bc:	241e0002 	li $s8,2
+    10c0:	149d0099 	bne $a0,$sp,1328 <fail>
+
+000010c4 <test_3>:
+    10c4:	3c028000 	lui $v0,0x8000
+    10c8:	00022042 	srl $a0,$v0,0x1
+    10cc:	3c1d4000 	lui $sp,0x4000
+    10d0:	241e0003 	li $s8,3
+    10d4:	149d0094 	bne $a0,$sp,1328 <fail>
+
+000010d8 <test_4>:
+    10d8:	3c028000 	lui $v0,0x8000
+    10dc:	000221c2 	srl $a0,$v0,0x7
+    10e0:	3c1d0100 	lui $sp,0x100
+    10e4:	241e0004 	li $s8,4
+    10e8:	149d008f 	bne $a0,$sp,1328 <fail>
+
+000010ec <test_5>:
+    10ec:	3c028000 	lui $v0,0x8000
+    10f0:	00022382 	srl $a0,$v0,0xe
+    10f4:	3c1d0002 	lui $sp,0x2
+    10f8:	241e0005 	li $s8,5
+    10fc:	149d008a 	bne $a0,$sp,1328 <fail>
+
+00001100 <test_6>:
+    1100:	3c028000 	lui $v0,0x8000
+    1104:	34420001 	ori $v0,$v0,0x1
+    1108:	000227c2 	srl $a0,$v0,0x1f
+    110c:	241d0001 	li $sp,1
+    1110:	241e0006 	li $s8,6
+    1114:	149d0084 	bne $a0,$sp,1328 <fail>
+
+00001118 <test_7>:
+    1118:	2402ffff 	li $v0,-1
+    111c:	00022002 	srl $a0,$v0,0x0
+    1120:	241dffff 	li $sp,-1
+    1124:	241e0007 	li $s8,7
+    1128:	149d007f 	bne $a0,$sp,1328 <fail>
+
+0000112c <test_8>:
+    112c:	2402ffff 	li $v0,-1
+    1130:	00022042 	srl $a0,$v0,0x1
+    1134:	3c1d7fff 	lui $sp,0x7fff
+    1138:	37bdffff 	ori $sp,$sp,0xffff
+    113c:	241e0008 	li $s8,8
+    1140:	149d0079 	bne $a0,$sp,1328 <fail>
+
+00001144 <test_9>:
+    1144:	2402ffff 	li $v0,-1
+    1148:	000221c2 	srl $a0,$v0,0x7
+    114c:	3c1d01ff 	lui $sp,0x1ff
+    1150:	37bdffff 	ori $sp,$sp,0xffff
+    1154:	241e0009 	li $s8,9
+    1158:	149d0073 	bne $a0,$sp,1328 <fail>
+
+0000115c <test_10>:
+    115c:	2402ffff 	li $v0,-1
+    1160:	00022382 	srl $a0,$v0,0xe
+    1164:	3c1d0003 	lui $sp,0x3
+    1168:	37bdffff 	ori $sp,$sp,0xffff
+    116c:	241e000a 	li $s8,10
+    1170:	149d006d 	bne $a0,$sp,1328 <fail>
+
+00001174 <test_11>:
+    1174:	2402ffff 	li $v0,-1
+    1178:	000227c2 	srl $a0,$v0,0x1f
+    117c:	241d0001 	li $sp,1
+    1180:	241e000b 	li $s8,11
+    1184:	149d0068 	bne $a0,$sp,1328 <fail>
+
+00001188 <test_12>:
+    1188:	3c022121 	lui $v0,0x2121
+    118c:	34422121 	ori $v0,$v0,0x2121
+    1190:	00022002 	srl $a0,$v0,0x0
+    1194:	3c1d2121 	lui $sp,0x2121
+    1198:	37bd2121 	ori $sp,$sp,0x2121
+    119c:	241e000c 	li $s8,12
+    11a0:	149d0061 	bne $a0,$sp,1328 <fail>
+
+000011a4 <test_13>:
+    11a4:	3c022121 	lui $v0,0x2121
+    11a8:	34422121 	ori $v0,$v0,0x2121
+    11ac:	00022042 	srl $a0,$v0,0x1
+    11b0:	3c1d1090 	lui $sp,0x1090
+    11b4:	37bd9090 	ori $sp,$sp,0x9090
+    11b8:	241e000d 	li $s8,13
+    11bc:	149d005a 	bne $a0,$sp,1328 <fail>
+
+000011c0 <test_14>:
+    11c0:	3c022121 	lui $v0,0x2121
+    11c4:	34422121 	ori $v0,$v0,0x2121
+    11c8:	000221c2 	srl $a0,$v0,0x7
+    11cc:	3c1d0042 	lui $sp,0x42
+    11d0:	37bd4242 	ori $sp,$sp,0x4242
+    11d4:	241e000e 	li $s8,14
+    11d8:	149d0053 	bne $a0,$sp,1328 <fail>
+
+000011dc <test_15>:
+    11dc:	3c022121 	lui $v0,0x2121
+    11e0:	34422121 	ori $v0,$v0,0x2121
+    11e4:	00022382 	srl $a0,$v0,0xe
+    11e8:	341d8484 	li $sp,0x8484
+    11ec:	241e000f 	li $s8,15
+    11f0:	149d004d 	bne $a0,$sp,1328 <fail>
+
+000011f4 <test_16>:
+    11f4:	3c022121 	lui $v0,0x2121
+    11f8:	34422121 	ori $v0,$v0,0x2121
+    11fc:	000227c2 	srl $a0,$v0,0x1f
+    1200:	241d0000 	li $sp,0
+    1204:	241e0010 	li $s8,16
+    1208:	149d0047 	bne $a0,$sp,1328 <fail>
+
+0000120c <test_17>:
+    120c:	3c028000 	lui $v0,0x8000
+    1210:	000211c2 	srl $v0,$v0,0x7
+    1214:	3c1d0100 	lui $sp,0x100
+    1218:	241e0011 	li $s8,17
+    121c:	145d0042 	bne $v0,$sp,1328 <fail>
+
+00001220 <test_18>:
+    1220:	24050000 	li $a1,0
+    1224:	3c028000 	lui $v0,0x8000
+    1228:	000221c2 	srl $a0,$v0,0x7
+    122c:	24870000 	addiu $a3,$a0,0
+    1230:	24a50001 	addiu $a1,$a1,1
+    1234:	24060002 	li $a2,2
+    1238:	14a6fffa 	bne $a1,$a2,1224 <test_18+4>
+    123c:	3c1d0100 	lui $sp,0x100
+    1240:	241e0012 	li $s8,18
+    1244:	14fd0038 	bne $a3,$sp,1328 <fail>
+
+00001248 <test_19>:
+    1248:	24050000 	li $a1,0
+    124c:	3c028000 	lui $v0,0x8000
+    1250:	00022382 	srl $a0,$v0,0xe
+    1254:	00000000 	nop
+    1258:	24870000 	addiu $a3,$a0,0
+    125c:	24a50001 	addiu $a1,$a1,1
+    1260:	24060002 	li $a2,2
+    1264:	14a6fff9 	bne $a1,$a2,124c <test_19+4>
+    1268:	3c1d0002 	lui $sp,0x2
+    126c:	241e0013 	li $s8,19
+    1270:	14fd002d 	bne $a3,$sp,1328 <fail>
+
+00001274 <test_20>:
+    1274:	24050000 	li $a1,0
+    1278:	3c028000 	lui $v0,0x8000
+    127c:	34420001 	ori $v0,$v0,0x1
+    1280:	000227c2 	srl $a0,$v0,0x1f
+    1284:	00000000 	nop
+    1288:	00000000 	nop
+    128c:	24870000 	addiu $a3,$a0,0
+    1290:	24a50001 	addiu $a1,$a1,1
+    1294:	24060002 	li $a2,2
+    1298:	14a6fff7 	bne $a1,$a2,1278 <test_20+4>
+    129c:	241d0001 	li $sp,1
+    12a0:	241e0014 	li $s8,20
+    12a4:	14fd0020 	bne $a3,$sp,1328 <fail>
+
+000012a8 <test_21>:
+    12a8:	24050000 	li $a1,0
+    12ac:	3c028000 	lui $v0,0x8000
+    12b0:	000221c2 	srl $a0,$v0,0x7
+    12b4:	24a50001 	addiu $a1,$a1,1
+    12b8:	24060002 	li $a2,2
+    12bc:	14a6fffb 	bne $a1,$a2,12ac <test_21+4>
+    12c0:	3c1d0100 	lui $sp,0x100
+    12c4:	241e0015 	li $s8,21
+    12c8:	149d0017 	bne $a0,$sp,1328 <fail>
+
+000012cc <test_22>:
+    12cc:	24050000 	li $a1,0
+    12d0:	3c028000 	lui $v0,0x8000
+    12d4:	00000000 	nop
+    12d8:	00022382 	srl $a0,$v0,0xe
+    12dc:	24a50001 	addiu $a1,$a1,1
+    12e0:	24060002 	li $a2,2
+    12e4:	14a6fffa 	bne $a1,$a2,12d0 <test_22+4>
+    12e8:	3c1d0002 	lui $sp,0x2
+    12ec:	241e0016 	li $s8,22
+    12f0:	149d000d 	bne $a0,$sp,1328 <fail>
+
+000012f4 <test_23>:
+    12f4:	24050000 	li $a1,0
+    12f8:	3c028000 	lui $v0,0x8000
+    12fc:	34420001 	ori $v0,$v0,0x1
+    1300:	00000000 	nop
+    1304:	00000000 	nop
+    1308:	000227c2 	srl $a0,$v0,0x1f
+    130c:	24a50001 	addiu $a1,$a1,1
+    1310:	24060002 	li $a2,2
+    1314:	14a6fff8 	bne $a1,$a2,12f8 <test_23+4>
+    1318:	241d0001 	li $sp,1
+    131c:	241e0017 	li $s8,23
+    1320:	149d0001 	bne $a0,$sp,1328 <fail>
+    1324:	141e0003 	bne $zero,$s8,1334 <pass>
+
+00001328 <fail>:
+    1328:	409ea800 	mtc0 $s8,$21
+    132c:	1000ffff 	b 132c <fail+4>
+    1330:	00000000 	nop
+
+00001334 <pass>:
+    1334:	4080a800 	mtc0 $zero,$21
+    1338:	1000ffff 	b 1338 <pass+4>
+    133c:	00000000 	nop
+Disassembly of section .aibpointers:
+Disassembly of section .data:
+
+00001340 <_fdata>:
+    1340:	00000000 	nop
+    1344:	00000001 	movf $zero,$zero,$fcc0
+    1348:	00000002 	srl $zero,$zero,0x0
+    134c:	00000003 	sra $zero,$zero,0x0
+    1350:	00000004 	sllv $zero,$zero,$zero
+    1354:	00000005 	selsl $zero,$zero,$zero
+    1358:	00000006 	srlv $zero,$zero,$zero
+    135c:	00000007 	srav $zero,$zero,$zero
+    1360:	00000008 	jr $zero
+
+00001364 <__testsentinel>:
+    1364:	deadbeef 	ld $t5,-16657($s5)
+
+00001368 <__teststatus>:
+    1368:	00005804 	sllv $t3,$zero,$zero
+    136c:	00000000 	nop
+Disassembly of section .reginfo:
+
+00001370 <.reginfo>:
+    1370:	e00700fc 	sc $a3,252($zero)
+    1374:	00000000 	nop
+    1378:	00000000 	nop
+    137c:	00000000 	nop
+    1380:	00000000 	nop
+    1384:	00009360 	0x9360

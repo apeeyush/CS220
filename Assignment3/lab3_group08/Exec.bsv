@@ -34,16 +34,16 @@ import Vector::*;
 function Data alu(Data a, Data b, AluFunc func);
   Data res = case(func)
      Add   : (a + b);
-     Sub   : ?;
-     And   : ?;
-     Or    : ?;
-     Xor   : ?;
-     Nor   : ?;
-     Slt   : ?;
-     Sltu  : ?;
-     LShift: ?;
-     RShift: ?;
-     Sra   : ?;
+     Sub   : (a - b);
+     And   : (a & b);
+     Or    : (a | b);
+     Xor   : (a ^ b);
+     Nor   : ~(a | b);
+     Slt   : zeroExtend( pack( signedLT(a,b) ) );
+     Sltu  : zeroExtend( pack(a < b));
+     LShift: (a << b[4:0]);
+     RShift: (a >> b[4:0]);
+     Sra   : signedShiftRight(a, b[4:0]);
   endcase;
   return res;
 endfunction
@@ -51,14 +51,14 @@ endfunction
 (* noinline *)
 function Bool aluBr(Data a, Data b, BrFunc brFunc);
   Bool brTaken = case(brFunc)
-    Eq  : ?;
-    Neq : ?;
-    Le  : ?;
-    Lt  : ?;
-    Ge  : ?;
-    Gt  : ?;
-    AT  : ?;
-    NT  : ?;
+    Eq  : (a == b);
+    Neq : (a != b);
+    Le  : signedLE(a,0);
+    Lt  : signedLT(a,0);
+    Ge  : signedGE(a,0);
+    Gt  : signedGT(a,0);
+    AT  : True;
+    NT  : False;
   endcase;
   return brTaken;
 endfunction

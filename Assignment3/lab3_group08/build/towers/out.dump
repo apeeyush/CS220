@@ -1,0 +1,360 @@
+
+build/towers/a.out:     file format elf32-bigmips
+
+Disassembly of section .text:
+
+00001000 <__start>:
+    1000:	27bdffe8 	addiu $sp,$sp,-24
+    1004:	afbf0010 	sw $ra,16($sp)
+    1008:	0c0004ea 	jal 13a8 <main>
+    100c:	4082a800 	mtc0 $v0,$21
+    1010:	08000404 	j 1010 <__start+10>
+    1014:	00000000 	nop
+    1018:	00000000 	nop
+    101c:	00000000 	nop
+
+00001020 <printInt>:
+    1020:	40849000 	mtc0 $a0,$18
+    1024:	03e00008 	jr $ra
+    1028:	00000000 	nop
+
+0000102c <printChar>:
+    102c:	40849800 	mtc0 $a0,$19
+    1030:	03e00008 	jr $ra
+    1034:	00000000 	nop
+
+00001038 <printStr>:
+    1038:	27bdffe0 	addiu $sp,$sp,-32
+    103c:	afb00010 	sw $s0,16($sp)
+    1040:	00808021 	move $s0,$a0
+    1044:	afb20018 	sw $s2,24($sp)
+    1048:	24120018 	li $s2,24
+    104c:	afb10014 	sw $s1,20($sp)
+    1050:	241100ff 	li $s1,255
+    1054:	afbf001c 	sw $ra,28($sp)
+    1058:	8e020000 	lw $v0,0($s0)
+    105c:	32030003 	andi $v1,$s0,0x3
+    1060:	000318c0 	sll $v1,$v1,0x3
+    1064:	02431823 	subu $v1,$s2,$v1
+    1068:	00712004 	sllv $a0,$s1,$v1
+    106c:	00441024 	and $v0,$v0,$a0
+    1070:	00622006 	srlv $a0,$v0,$v1
+    1074:	10800003 	beqz $a0,1084 <printStr+4c>
+    1078:	0c00040b 	jal 102c <printChar>
+    107c:	26100001 	addiu $s0,$s0,1
+    1080:	08000416 	j 1058 <printStr+20>
+    1084:	8fbf001c 	lw $ra,28($sp)
+    1088:	8fb20018 	lw $s2,24($sp)
+    108c:	8fb10014 	lw $s1,20($sp)
+    1090:	8fb00010 	lw $s0,16($sp)
+    1094:	27bd0020 	addiu $sp,$sp,32
+    1098:	03e00008 	jr $ra
+    109c:	00000000 	nop
+
+000010a0 <getTime>:
+    10a0:	40025000 	mfc0 $v0,$10
+    10a4:	03e00008 	jr $ra
+
+000010a8 <getInsts>:
+    10a8:	40025800 	mfc0 $v0,$11
+    10ac:	03e00008 	jr $ra
+
+000010b0 <list_getSize>:
+    10b0:	8c820000 	lw $v0,0($a0)
+    10b4:	03e00008 	jr $ra
+
+000010b8 <list_init>:
+    10b8:	ac800000 	sw $zero,0($a0)
+    10bc:	ac800004 	sw $zero,4($a0)
+    10c0:	03e00008 	jr $ra
+
+000010c4 <list_push>:
+    10c4:	3c020000 	lui $v0,0x0
+    10c8:	8c4214d4 	lw $v0,5332($v0)
+    10cc:	3c060000 	lui $a2,0x0
+    10d0:	24c614d4 	addiu $a2,$a2,5332
+    10d4:	8cc30000 	lw $v1,0($a2)
+    10d8:	8c420004 	lw $v0,4($v0)
+    10dc:	acc20000 	sw $v0,0($a2)
+    10e0:	8c820004 	lw $v0,4($a0)
+    10e4:	ac620004 	sw $v0,4($v1)
+    10e8:	ac830004 	sw $v1,4($a0)
+    10ec:	ac650000 	sw $a1,0($v1)
+    10f0:	8c820000 	lw $v0,0($a0)
+    10f4:	24420001 	addiu $v0,$v0,1
+    10f8:	ac820000 	sw $v0,0($a0)
+    10fc:	03e00008 	jr $ra
+
+00001100 <list_pop>:
+    1100:	8c850004 	lw $a1,4($a0)
+    1104:	8ca30004 	lw $v1,4($a1)
+    1108:	8ca20000 	lw $v0,0($a1)
+    110c:	3c060000 	lui $a2,0x0
+    1110:	24c614d4 	addiu $a2,$a2,5332
+    1114:	ac830004 	sw $v1,4($a0)
+    1118:	8cc30000 	lw $v1,0($a2)
+    111c:	aca30004 	sw $v1,4($a1)
+    1120:	acc50000 	sw $a1,0($a2)
+    1124:	8c830000 	lw $v1,0($a0)
+    1128:	2463ffff 	addiu $v1,$v1,-1
+    112c:	ac830000 	sw $v1,0($a0)
+    1130:	03e00008 	jr $ra
+
+00001134 <list_clear>:
+    1134:	27bdffe8 	addiu $sp,$sp,-24
+    1138:	afb00010 	sw $s0,16($sp)
+    113c:	00808021 	move $s0,$a0
+    1140:	afbf0014 	sw $ra,20($sp)
+    1144:	02002021 	move $a0,$s0
+    1148:	0c00042c 	jal 10b0 <list_getSize>
+    114c:	18400003 	blez $v0,115c <list_clear+28>
+    1150:	02002021 	move $a0,$s0
+    1154:	0c000440 	jal 1100 <list_pop>
+    1158:	08000451 	j 1144 <list_clear+10>
+    115c:	8fbf0014 	lw $ra,20($sp)
+    1160:	8fb00010 	lw $s0,16($sp)
+    1164:	27bd0018 	addiu $sp,$sp,24
+    1168:	03e00008 	jr $ra
+
+0000116c <towers_init>:
+    116c:	27bdffe0 	addiu $sp,$sp,-32
+    1170:	afb10014 	sw $s1,20($sp)
+    1174:	00808821 	move $s1,$a0
+    1178:	afb20018 	sw $s2,24($sp)
+    117c:	00a09021 	move $s2,$a1
+    1180:	26240008 	addiu $a0,$s1,8
+    1184:	afbf001c 	sw $ra,28($sp)
+    1188:	afb00010 	sw $s0,16($sp)
+    118c:	ae320000 	sw $s2,0($s1)
+    1190:	ae200004 	sw $zero,4($s1)
+    1194:	0c00042e 	jal 10b8 <list_init>
+    1198:	26240010 	addiu $a0,$s1,16
+    119c:	0c00042e 	jal 10b8 <list_init>
+    11a0:	26240018 	addiu $a0,$s1,24
+    11a4:	0c00042e 	jal 10b8 <list_init>
+    11a8:	00008021 	move $s0,$zero
+    11ac:	1a400006 	blez $s2,11c8 <towers_init+5c>
+    11b0:	26240008 	addiu $a0,$s1,8
+    11b4:	02502823 	subu $a1,$s2,$s0
+    11b8:	0c000431 	jal 10c4 <list_push>
+    11bc:	26100001 	addiu $s0,$s0,1
+    11c0:	0212102a 	slt $v0,$s0,$s2
+    11c4:	1440fffa 	bnez $v0,11b0 <towers_init+44>
+    11c8:	8fbf001c 	lw $ra,28($sp)
+    11cc:	8fb20018 	lw $s2,24($sp)
+    11d0:	8fb10014 	lw $s1,20($sp)
+    11d4:	8fb00010 	lw $s0,16($sp)
+    11d8:	27bd0020 	addiu $sp,$sp,32
+    11dc:	03e00008 	jr $ra
+
+000011e0 <towers_clear>:
+    11e0:	27bdffe8 	addiu $sp,$sp,-24
+    11e4:	afb00010 	sw $s0,16($sp)
+    11e8:	00808021 	move $s0,$a0
+    11ec:	26040008 	addiu $a0,$s0,8
+    11f0:	afbf0014 	sw $ra,20($sp)
+    11f4:	0c00044d 	jal 1134 <list_clear>
+    11f8:	26040010 	addiu $a0,$s0,16
+    11fc:	0c00044d 	jal 1134 <list_clear>
+    1200:	26040018 	addiu $a0,$s0,24
+    1204:	0c00044d 	jal 1134 <list_clear>
+    1208:	8e050000 	lw $a1,0($s0)
+    120c:	02002021 	move $a0,$s0
+    1210:	0c00045b 	jal 116c <towers_init>
+    1214:	8fbf0014 	lw $ra,20($sp)
+    1218:	8fb00010 	lw $s0,16($sp)
+    121c:	27bd0018 	addiu $sp,$sp,24
+    1220:	03e00008 	jr $ra
+
+00001224 <towers_solve_h>:
+    1224:	27bdffd0 	addiu $sp,$sp,-48
+    1228:	afb40028 	sw $s4,40($sp)
+    122c:	8fb40040 	lw $s4,64($sp)
+    1230:	afb1001c 	sw $s1,28($sp)
+    1234:	00808821 	move $s1,$a0
+    1238:	afb20020 	sw $s2,32($sp)
+    123c:	00c09021 	move $s2,$a2
+    1240:	afb30024 	sw $s3,36($sp)
+    1244:	00e09821 	move $s3,$a3
+    1248:	24020001 	li $v0,1
+    124c:	afbf002c 	sw $ra,44($sp)
+    1250:	afb00018 	sw $s0,24($sp)
+    1254:	14a20009 	bne $a1,$v0,127c <towers_solve_h+58>
+    1258:	02402021 	move $a0,$s2
+    125c:	0c000440 	jal 1100 <list_pop>
+    1260:	02802021 	move $a0,$s4
+    1264:	00402821 	move $a1,$v0
+    1268:	0c000431 	jal 10c4 <list_push>
+    126c:	8e220004 	lw $v0,4($s1)
+    1270:	24420001 	addiu $v0,$v0,1
+    1274:	ae220004 	sw $v0,4($s1)
+    1278:	080004b2 	j 12c8 <towers_solve_h+a4>
+    127c:	02202021 	move $a0,$s1
+    1280:	24b0ffff 	addiu $s0,$a1,-1
+    1284:	02002821 	move $a1,$s0
+    1288:	02403021 	move $a2,$s2
+    128c:	02803821 	move $a3,$s4
+    1290:	afb30010 	sw $s3,16($sp)
+    1294:	0c000489 	jal 1224 <towers_solve_h>
+    1298:	02202021 	move $a0,$s1
+    129c:	24050001 	li $a1,1
+    12a0:	02403021 	move $a2,$s2
+    12a4:	02603821 	move $a3,$s3
+    12a8:	afb40010 	sw $s4,16($sp)
+    12ac:	0c000489 	jal 1224 <towers_solve_h>
+    12b0:	02202021 	move $a0,$s1
+    12b4:	02002821 	move $a1,$s0
+    12b8:	02603021 	move $a2,$s3
+    12bc:	02403821 	move $a3,$s2
+    12c0:	afb40010 	sw $s4,16($sp)
+    12c4:	0c000489 	jal 1224 <towers_solve_h>
+    12c8:	8fbf002c 	lw $ra,44($sp)
+    12cc:	8fb40028 	lw $s4,40($sp)
+    12d0:	8fb30024 	lw $s3,36($sp)
+    12d4:	8fb20020 	lw $s2,32($sp)
+    12d8:	8fb1001c 	lw $s1,28($sp)
+    12dc:	8fb00018 	lw $s0,24($sp)
+    12e0:	27bd0030 	addiu $sp,$sp,48
+    12e4:	03e00008 	jr $ra
+
+000012e8 <towers_solve>:
+    12e8:	27bdffe0 	addiu $sp,$sp,-32
+    12ec:	24820018 	addiu $v0,$a0,24
+    12f0:	8c850000 	lw $a1,0($a0)
+    12f4:	24860008 	addiu $a2,$a0,8
+    12f8:	24870010 	addiu $a3,$a0,16
+    12fc:	afbf0018 	sw $ra,24($sp)
+    1300:	afa20010 	sw $v0,16($sp)
+    1304:	0c000489 	jal 1224 <towers_solve_h>
+    1308:	8fbf0018 	lw $ra,24($sp)
+    130c:	27bd0020 	addiu $sp,$sp,32
+    1310:	03e00008 	jr $ra
+
+00001314 <towers_verify>:
+    1314:	27bdffe0 	addiu $sp,$sp,-32
+    1318:	afb10014 	sw $s1,20($sp)
+    131c:	00808821 	move $s1,$a0
+    1320:	afb00010 	sw $s0,16($sp)
+    1324:	00008021 	move $s0,$zero
+    1328:	26240008 	addiu $a0,$s1,8
+    132c:	afbf0018 	sw $ra,24($sp)
+    1330:	0c00042c 	jal 10b0 <list_getSize>
+    1334:	14400007 	bnez $v0,1354 <towers_verify+40>
+    1338:	26240010 	addiu $a0,$s1,16
+    133c:	0c00042c 	jal 10b0 <list_getSize>
+    1340:	14400004 	bnez $v0,1354 <towers_verify+40>
+    1344:	26240018 	addiu $a0,$s1,24
+    1348:	0c00042c 	jal 10b0 <list_getSize>
+    134c:	8e230000 	lw $v1,0($s1)
+    1350:	10430002 	beq $v0,$v1,135c <towers_verify+48>
+    1354:	00001021 	move $v0,$zero
+    1358:	080004e5 	j 1394 <towers_verify+80>
+    135c:	8e23001c 	lw $v1,28($s1)
+    1360:	10600005 	beqz $v1,1378 <towers_verify+64>
+    1364:	8c620000 	lw $v0,0($v1)
+    1368:	26100001 	addiu $s0,$s0,1
+    136c:	1450fff9 	bne $v0,$s0,1354 <towers_verify+40>
+    1370:	8c630004 	lw $v1,4($v1)
+    1374:	1460fffb 	bnez $v1,1364 <towers_verify+50>
+    1378:	8e230000 	lw $v1,0($s1)
+    137c:	24040001 	li $a0,1
+    1380:	8e220004 	lw $v0,4($s1)
+    1384:	00642004 	sllv $a0,$a0,$v1
+    1388:	2484ffff 	addiu $a0,$a0,-1
+    138c:	00441026 	xor $v0,$v0,$a0
+    1390:	2c420001 	sltiu $v0,$v0,1
+    1394:	8fbf0018 	lw $ra,24($sp)
+    1398:	8fb10014 	lw $s1,20($sp)
+    139c:	8fb00010 	lw $s0,16($sp)
+    13a0:	27bd0020 	addiu $sp,$sp,32
+    13a4:	03e00008 	jr $ra
+
+000013a8 <main>:
+    13a8:	27bdffa0 	addiu $sp,$sp,-96
+    13ac:	afb00050 	sw $s0,80($sp)
+    13b0:	3c100000 	lui $s0,0x0
+    13b4:	261014d0 	addiu $s0,$s0,5328
+    13b8:	02002021 	move $a0,$s0
+    13bc:	afbf0058 	sw $ra,88($sp)
+    13c0:	afb10054 	sw $s1,84($sp)
+    13c4:	0c00042e 	jal 10b8 <list_init>
+    13c8:	00002021 	move $a0,$zero
+    13cc:	3c020000 	lui $v0,0x0
+    13d0:	244214d8 	addiu $v0,$v0,5336
+    13d4:	00401821 	move $v1,$v0
+    13d8:	24660004 	addiu $a2,$v1,4
+    13dc:	24650008 	addiu $a1,$v1,8
+    13e0:	24020007 	li $v0,7
+    13e4:	ae020000 	sw $v0,0($s0)
+    13e8:	24020063 	li $v0,99
+    13ec:	ae030004 	sw $v1,4($s0)
+    13f0:	ac600034 	sw $zero,52($v1)
+    13f4:	ac620030 	sw $v0,48($v1)
+    13f8:	acc50000 	sw $a1,0($a2)
+    13fc:	ac640000 	sw $a0,0($v1)
+    1400:	24630008 	addiu $v1,$v1,8
+    1404:	24c60008 	addiu $a2,$a2,8
+    1408:	24a50008 	addiu $a1,$a1,8
+    140c:	24840001 	addiu $a0,$a0,1
+    1410:	28820006 	slti $v0,$a0,6
+    1414:	1440fff8 	bnez $v0,13f8 <main+50>
+    1418:	27a40010 	addiu $a0,$sp,16
+    141c:	24050007 	li $a1,7
+    1420:	0c00045b 	jal 116c <towers_init>
+    1424:	27a40010 	addiu $a0,$sp,16
+    1428:	0c000478 	jal 11e0 <towers_clear>
+    142c:	0c000428 	jal 10a0 <getTime>
+    1430:	00408021 	move $s0,$v0
+    1434:	0c00042a 	jal 10a8 <getInsts>
+    1438:	00408821 	move $s1,$v0
+    143c:	27a40010 	addiu $a0,$sp,16
+    1440:	0c0004ba 	jal 12e8 <towers_solve>
+    1444:	0c000428 	jal 10a0 <getTime>
+    1448:	00508023 	subu $s0,$v0,$s0
+    144c:	0c00042a 	jal 10a8 <getInsts>
+    1450:	00518823 	subu $s1,$v0,$s1
+    1454:	3c040000 	lui $a0,0x0
+    1458:	248414b0 	addiu $a0,$a0,5296
+    145c:	0c00040e 	jal 1038 <printStr>
+    1460:	02002021 	move $a0,$s0
+    1464:	0c000408 	jal 1020 <printInt>
+    1468:	2404000a 	li $a0,10
+    146c:	0c00040b 	jal 102c <printChar>
+    1470:	3c040000 	lui $a0,0x0
+    1474:	248414bc 	addiu $a0,$a0,5308
+    1478:	0c00040e 	jal 1038 <printStr>
+    147c:	02202021 	move $a0,$s1
+    1480:	0c000408 	jal 1020 <printInt>
+    1484:	2404000a 	li $a0,10
+    1488:	0c00040b 	jal 102c <printChar>
+    148c:	27a40010 	addiu $a0,$sp,16
+    1490:	0c0004c5 	jal 1314 <towers_verify>
+    1494:	8fbf0058 	lw $ra,88($sp)
+    1498:	8fb10054 	lw $s1,84($sp)
+    149c:	8fb00050 	lw $s0,80($sp)
+    14a0:	2c420001 	sltiu $v0,$v0,1
+    14a4:	27bd0060 	addiu $sp,$sp,96
+    14a8:	03e00008 	jr $ra
+    14ac:	00000000 	nop
+Disassembly of section .rodata:
+
+000014b0 <_frdata>:
+    14b0:	4379636c 	c0 0x179636c
+    14b4:	6573203d 	daddiu $s3,$t3,8253
+    14b8:	20000000 	addi $zero,$zero,0
+    14bc:	496e7374 	0x496e7374
+    14c0:	7320203d 	addciu $zero,$t9,8253
+    14c4:	20000000 	addi $zero,$zero,0
+    14c8:	00000000 	nop
+    14cc:	00000000 	nop
+Disassembly of section .aibpointers:
+Disassembly of section .data:
+Disassembly of section .reginfo:
+
+00001510 <.reginfo>:
+    1510:	b01f00fc 	sdl $ra,252($zero)
+    1514:	00000000 	nop
+    1518:	00000000 	nop
+    151c:	00000000 	nop
+    1520:	00000000 	nop
+    1524:	000094c0 	sll $s2,$zero,0x13
