@@ -67,9 +67,9 @@ endfunction
 function Addr brAddrCalc(Addr pc, Data val, IType iType, Data imm, Bool taken);
   Addr pcPlus4 = pc + 4; 
   Addr targetAddr = case (iType)
-    J  : ?;
-    Jr : ?;
-    Br : ?;
+    J  : {pcPlus4[31:28], imm[27:0]};
+    Jr : val;
+    Br : (taken? pcPlus4 + imm : pcPlus4);
     Alu, Ld, St, Mfc0, Mtc0, Unsupported: pcPlus4;
   endcase;
   return targetAddr;
