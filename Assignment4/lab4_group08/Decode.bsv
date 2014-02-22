@@ -23,13 +23,13 @@ import Vector::*;
 function DecodedInst decode(Data inst);
   DecodedInst dInst = ?;
   let opcode = inst[ 31 : 26 ];
-  let rs     = // fixme
-  let rt     = // fixme
-  let rd     = // fixme
-  let shamt  = // fixme
-  let funct  = // fixme
-  let imm    = // fixme
-  let target = // fixme
+  let rs     = inst[ 25 : 21 ];
+  let rt     = inst[ 20 : 16 ];
+  let rd     = inst[ 15 : 11 ];
+  let shamt  = inst[ 10 : 6 ];
+  let funct  = inst[ 5 : 0 ];
+  let imm    = inst[ 15 : 0 ];
+  let target = inst[ 25 : 0 ];
 
   case (opcode)
     opADDIU, opSLTI, opSLTIU, opANDI, opORI, opXORI, opLUI:
@@ -38,14 +38,14 @@ function DecodedInst decode(Data inst);
       dInst.aluFunc = case (opcode)
         opADDIU, opLUI: Add;
         opSLTI: Slt;
-        opSLTIU: // fixme
-        opANDI: // fixme
-        opORI: //fixme
-        opXORI: // fixme
+        opSLTIU: Sltu;
+        opANDI: And;
+        opORI: Or;
+        opXORI: Xor;
       endcase;
       dInst.dst  = validReg(rt);
-      dInst.src1 = // fixme
-      dInst.src2 = // fixme
+      dInst.src1 = rs;
+      dInst.src2 = rt;
       dInst.imm = Valid(case (opcode)
         opADDIU, opSLTI, opSLTIU: signExtend(imm);
         opLUI: {imm, 16'b0};
@@ -58,21 +58,21 @@ function DecodedInst decode(Data inst);
     begin
       dInst.iType = Ld;
       dInst.aluFunc = Add;
-      dInst.dst  = // fixme
+      dInst.dst  = rt;
       dInst.src1 = // fixme
       dInst.src2 = // fixme
       dInst.imm    = Valid(signExtend(imm));
-      dInst.brFunc = // fixme
+      dInst.brFunc = NT;
     end
     
     opSB, opSH, opSW:
     begin
-      dInst.iType = // fixme
+      dInst.iType = St;
       dInst.aluFunc = // fixme
       dInst.dst  = // fixme
       dInst.src1 = // fixme
       dInst.src2 = // fixme
-      dInst.imm    = // fixme
+      dInst.imm    = Valid(signExtend(imm));
       dInst.brFunc = NT;
     end
     
@@ -90,10 +90,10 @@ function DecodedInst decode(Data inst);
     begin
       dInst.iType = Br;
       dInst.brFunc = case(opcode)
-        opBEQ: // fixme
-        opBNE: // fixme
-        opBLEZ: // fixme
-        opBGTZ: // fixme
+        opBEQ: Eq;
+        opBNE: Neq;
+        opBLEZ: Le;
+        opBGTZ: Gt;
         opRT: (rt==rtBLTZ ? Lt : Ge);
       endcase;
       dInst.dst  = Invalid;
