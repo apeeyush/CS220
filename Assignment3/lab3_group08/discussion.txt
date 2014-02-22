@@ -1,3 +1,33 @@
 Write your answers to the discussion questions asked in the lab handout in this file.
 
 -------------------------------------------------------------------------------------
+
+Running towers
+Cycles =       9907
+Insts  =       9907
+IPC (Instructions per cycle) = 1
+
+Running multiply
+Cycles =      21098
+Insts  =      21098
+IPC (Instructions per cycle) = 1
+
+Running qsort
+Cycles =      21626
+Insts  =      21626
+IPC (Instructions per cycle) = 1
+
+Running vvadd
+Cycles =       3018
+Insts  =       3018
+IPC (Instructions per cycle) = 1
+
+Running filters
+Cycles =      71225
+Insts  =      71225
+IPC (Instructions per cycle) = 1
+
+Running median
+Cycles =       6871
+Insts  =       6871
+IPC (Instructions per cycle) = 1

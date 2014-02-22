@@ -1,0 +1,313 @@
+
+build/smipsv2_lw.S/a.out:     file format elf32-bigmips
+
+Disassembly of section .text:
+
+00001000 <__start>:
+    1000:	27bdffe8 	addiu $sp,$sp,-24
+    1004:	afbf0010 	sw $ra,16($sp)
+    1008:	0c00042c 	jal 10b0 <main>
+    100c:	4082a800 	mtc0 $v0,$21
+    1010:	08000404 	j 1010 <__start+10>
+    1014:	00000000 	nop
+    1018:	00000000 	nop
+    101c:	00000000 	nop
+
+00001020 <printInt>:
+    1020:	40849000 	mtc0 $a0,$18
+    1024:	03e00008 	jr $ra
+    1028:	00000000 	nop
+
+0000102c <printChar>:
+    102c:	40849800 	mtc0 $a0,$19
+    1030:	03e00008 	jr $ra
+    1034:	00000000 	nop
+
+00001038 <printStr>:
+    1038:	27bdffe0 	addiu $sp,$sp,-32
+    103c:	afb00010 	sw $s0,16($sp)
+    1040:	00808021 	move $s0,$a0
+    1044:	afb20018 	sw $s2,24($sp)
+    1048:	24120018 	li $s2,24
+    104c:	afb10014 	sw $s1,20($sp)
+    1050:	241100ff 	li $s1,255
+    1054:	afbf001c 	sw $ra,28($sp)
+    1058:	8e020000 	lw $v0,0($s0)
+    105c:	32030003 	andi $v1,$s0,0x3
+    1060:	000318c0 	sll $v1,$v1,0x3
+    1064:	02431823 	subu $v1,$s2,$v1
+    1068:	00712004 	sllv $a0,$s1,$v1
+    106c:	00441024 	and $v0,$v0,$a0
+    1070:	00622006 	srlv $a0,$v0,$v1
+    1074:	10800003 	beqz $a0,1084 <printStr+4c>
+    1078:	0c00040b 	jal 102c <printChar>
+    107c:	26100001 	addiu $s0,$s0,1
+    1080:	08000416 	j 1058 <printStr+20>
+    1084:	8fbf001c 	lw $ra,28($sp)
+    1088:	8fb20018 	lw $s2,24($sp)
+    108c:	8fb10014 	lw $s1,20($sp)
+    1090:	8fb00010 	lw $s0,16($sp)
+    1094:	27bd0020 	addiu $sp,$sp,32
+    1098:	03e00008 	jr $ra
+    109c:	00000000 	nop
+
+000010a0 <getTime>:
+    10a0:	40025000 	mfc0 $v0,$10
+    10a4:	03e00008 	jr $ra
+
+000010a8 <getInsts>:
+    10a8:	40025800 	mfc0 $v0,$11
+    10ac:	03e00008 	jr $ra
+
+000010b0 <main>:
+    10b0:	3c020000 	lui $v0,0x0
+    10b4:	24421384 	addiu $v0,$v0,4996
+    10b8:	8c440000 	lw $a0,0($v0)
+    10bc:	3c1d00ff 	lui $sp,0xff
+    10c0:	37bd00ff 	ori $sp,$sp,0xff
+    10c4:	241e0002 	li $s8,2
+    10c8:	149d009c 	bne $a0,$sp,133c <fail>
+
+000010cc <test_3>:
+    10cc:	3c020000 	lui $v0,0x0
+    10d0:	24421384 	addiu $v0,$v0,4996
+    10d4:	8c440004 	lw $a0,4($v0)
+    10d8:	3c1dff00 	lui $sp,0xff00
+    10dc:	37bdff00 	ori $sp,$sp,0xff00
+    10e0:	241e0003 	li $s8,3
+    10e4:	149d0095 	bne $a0,$sp,133c <fail>
+
+000010e8 <test_4>:
+    10e8:	3c020000 	lui $v0,0x0
+    10ec:	24421384 	addiu $v0,$v0,4996
+    10f0:	8c440008 	lw $a0,8($v0)
+    10f4:	3c1d0ff0 	lui $sp,0xff0
+    10f8:	37bd0ff0 	ori $sp,$sp,0xff0
+    10fc:	241e0004 	li $s8,4
+    1100:	149d008e 	bne $a0,$sp,133c <fail>
+
+00001104 <test_5>:
+    1104:	3c020000 	lui $v0,0x0
+    1108:	24421384 	addiu $v0,$v0,4996
+    110c:	8c44000c 	lw $a0,12($v0)
+    1110:	3c1df00f 	lui $sp,0xf00f
+    1114:	37bdf00f 	ori $sp,$sp,0xf00f
+    1118:	241e0005 	li $s8,5
+    111c:	149d0087 	bne $a0,$sp,133c <fail>
+
+00001120 <test_6>:
+    1120:	3c020000 	lui $v0,0x0
+    1124:	24421390 	addiu $v0,$v0,5008
+    1128:	8c44fff4 	lw $a0,-12($v0)
+    112c:	3c1d00ff 	lui $sp,0xff
+    1130:	37bd00ff 	ori $sp,$sp,0xff
+    1134:	241e0006 	li $s8,6
+    1138:	149d0080 	bne $a0,$sp,133c <fail>
+
+0000113c <test_7>:
+    113c:	3c020000 	lui $v0,0x0
+    1140:	24421390 	addiu $v0,$v0,5008
+    1144:	8c44fff8 	lw $a0,-8($v0)
+    1148:	3c1dff00 	lui $sp,0xff00
+    114c:	37bdff00 	ori $sp,$sp,0xff00
+    1150:	241e0007 	li $s8,7
+    1154:	149d0079 	bne $a0,$sp,133c <fail>
+
+00001158 <test_8>:
+    1158:	3c020000 	lui $v0,0x0
+    115c:	24421390 	addiu $v0,$v0,5008
+    1160:	8c44fffc 	lw $a0,-4($v0)
+    1164:	3c1d0ff0 	lui $sp,0xff0
+    1168:	37bd0ff0 	ori $sp,$sp,0xff0
+    116c:	241e0008 	li $s8,8
+    1170:	149d0072 	bne $a0,$sp,133c <fail>
+
+00001174 <test_9>:
+    1174:	3c020000 	lui $v0,0x0
+    1178:	24421390 	addiu $v0,$v0,5008
+    117c:	8c440000 	lw $a0,0($v0)
+    1180:	3c1df00f 	lui $sp,0xf00f
+    1184:	37bdf00f 	ori $sp,$sp,0xf00f
+    1188:	241e0009 	li $s8,9
+    118c:	149d006b 	bne $a0,$sp,133c <fail>
+
+00001190 <test_10>:
+    1190:	3c020000 	lui $v0,0x0
+    1194:	24421384 	addiu $v0,$v0,4996
+    1198:	2442ffe0 	addiu $v0,$v0,-32
+    119c:	8c440020 	lw $a0,32($v0)
+    11a0:	3c1d00ff 	lui $sp,0xff
+    11a4:	37bd00ff 	ori $sp,$sp,0xff
+    11a8:	241e000a 	li $s8,10
+    11ac:	149d0063 	bne $a0,$sp,133c <fail>
+
+000011b0 <test_11>:
+    11b0:	3c020000 	lui $v0,0x0
+    11b4:	24421384 	addiu $v0,$v0,4996
+    11b8:	2442fffd 	addiu $v0,$v0,-3
+    11bc:	8c440007 	lw $a0,7($v0)
+    11c0:	3c1dff00 	lui $sp,0xff00
+    11c4:	37bdff00 	ori $sp,$sp,0xff00
+    11c8:	241e000b 	li $s8,11
+    11cc:	149d005b 	bne $a0,$sp,133c <fail>
+
+000011d0 <test_12>:
+    11d0:	241e000c 	li $s8,12
+    11d4:	24050000 	li $a1,0
+    11d8:	3c020000 	lui $v0,0x0
+    11dc:	24421388 	addiu $v0,$v0,5000
+    11e0:	8c440004 	lw $a0,4($v0)
+    11e4:	24870000 	addiu $a3,$a0,0
+    11e8:	3c1d0ff0 	lui $sp,0xff0
+    11ec:	37bd0ff0 	ori $sp,$sp,0xff0
+    11f0:	14fd0052 	bne $a3,$sp,133c <fail>
+    11f4:	24a50001 	addiu $a1,$a1,1
+    11f8:	24060002 	li $a2,2
+    11fc:	14a6fff6 	bne $a1,$a2,11d8 <test_12+8>
+
+00001200 <test_13>:
+    1200:	241e000d 	li $s8,13
+    1204:	24050000 	li $a1,0
+    1208:	3c020000 	lui $v0,0x0
+    120c:	2442138c 	addiu $v0,$v0,5004
+    1210:	8c440004 	lw $a0,4($v0)
+    1214:	00000000 	nop
+    1218:	24870000 	addiu $a3,$a0,0
+    121c:	3c1df00f 	lui $sp,0xf00f
+    1220:	37bdf00f 	ori $sp,$sp,0xf00f
+    1224:	14fd0045 	bne $a3,$sp,133c <fail>
+    1228:	24a50001 	addiu $a1,$a1,1
+    122c:	24060002 	li $a2,2
+    1230:	14a6fff5 	bne $a1,$a2,1208 <test_13+8>
+
+00001234 <test_14>:
+    1234:	241e000e 	li $s8,14
+    1238:	24050000 	li $a1,0
+    123c:	3c020000 	lui $v0,0x0
+    1240:	24421384 	addiu $v0,$v0,4996
+    1244:	8c440004 	lw $a0,4($v0)
+    1248:	00000000 	nop
+    124c:	00000000 	nop
+    1250:	24870000 	addiu $a3,$a0,0
+    1254:	3c1dff00 	lui $sp,0xff00
+    1258:	37bdff00 	ori $sp,$sp,0xff00
+    125c:	14fd0037 	bne $a3,$sp,133c <fail>
+    1260:	24a50001 	addiu $a1,$a1,1
+    1264:	24060002 	li $a2,2
+    1268:	14a6fff4 	bne $a1,$a2,123c <test_14+8>
+
+0000126c <test_15>:
+    126c:	241e000f 	li $s8,15
+    1270:	24050000 	li $a1,0
+    1274:	3c020000 	lui $v0,0x0
+    1278:	24421388 	addiu $v0,$v0,5000
+    127c:	8c440004 	lw $a0,4($v0)
+    1280:	3c1d0ff0 	lui $sp,0xff0
+    1284:	37bd0ff0 	ori $sp,$sp,0xff0
+    1288:	149d002c 	bne $a0,$sp,133c <fail>
+    128c:	24a50001 	addiu $a1,$a1,1
+    1290:	24060002 	li $a2,2
+    1294:	14a6fff7 	bne $a1,$a2,1274 <test_15+8>
+
+00001298 <test_16>:
+    1298:	241e0010 	li $s8,16
+    129c:	24050000 	li $a1,0
+    12a0:	3c020000 	lui $v0,0x0
+    12a4:	2442138c 	addiu $v0,$v0,5004
+    12a8:	00000000 	nop
+    12ac:	8c440004 	lw $a0,4($v0)
+    12b0:	3c1df00f 	lui $sp,0xf00f
+    12b4:	37bdf00f 	ori $sp,$sp,0xf00f
+    12b8:	149d0020 	bne $a0,$sp,133c <fail>
+    12bc:	24a50001 	addiu $a1,$a1,1
+    12c0:	24060002 	li $a2,2
+    12c4:	14a6fff6 	bne $a1,$a2,12a0 <test_16+8>
+
+000012c8 <test_17>:
+    12c8:	241e0011 	li $s8,17
+    12cc:	24050000 	li $a1,0
+    12d0:	3c020000 	lui $v0,0x0
+    12d4:	24421384 	addiu $v0,$v0,4996
+    12d8:	00000000 	nop
+    12dc:	00000000 	nop
+    12e0:	8c440004 	lw $a0,4($v0)
+    12e4:	3c1dff00 	lui $sp,0xff00
+    12e8:	37bdff00 	ori $sp,$sp,0xff00
+    12ec:	149d0013 	bne $a0,$sp,133c <fail>
+    12f0:	24a50001 	addiu $a1,$a1,1
+    12f4:	24060002 	li $a2,2
+    12f8:	14a6fff5 	bne $a1,$a2,12d0 <test_17+8>
+
+000012fc <test_18>:
+    12fc:	3c040000 	lui $a0,0x0
+    1300:	24841384 	addiu $a0,$a0,4996
+    1304:	8c830000 	lw $v1,0($a0)
+    1308:	24030002 	li $v1,2
+    130c:	241d0002 	li $sp,2
+    1310:	241e0012 	li $s8,18
+    1314:	147d0009 	bne $v1,$sp,133c <fail>
+
+00001318 <test_19>:
+    1318:	3c040000 	lui $a0,0x0
+    131c:	24841384 	addiu $a0,$a0,4996
+    1320:	8c830000 	lw $v1,0($a0)
+    1324:	00000000 	nop
+    1328:	24030002 	li $v1,2
+    132c:	241d0002 	li $sp,2
+    1330:	241e0013 	li $s8,19
+    1334:	147d0001 	bne $v1,$sp,133c <fail>
+    1338:	141e0003 	bne $zero,$s8,1348 <pass>
+
+0000133c <fail>:
+    133c:	409ea800 	mtc0 $s8,$21
+    1340:	1000ffff 	b 1340 <fail+4>
+    1344:	00000000 	nop
+
+00001348 <pass>:
+    1348:	4080a800 	mtc0 $zero,$21
+    134c:	1000ffff 	b 134c <pass+4>
+    1350:	00000000 	nop
+    1354:	00000000 	nop
+    1358:	00000000 	nop
+    135c:	00000000 	nop
+Disassembly of section .aibpointers:
+Disassembly of section .data:
+
+00001360 <_fdata>:
+    1360:	00000000 	nop
+    1364:	00000001 	movf $zero,$zero,$fcc0
+    1368:	00000002 	srl $zero,$zero,0x0
+    136c:	00000003 	sra $zero,$zero,0x0
+    1370:	00000004 	sllv $zero,$zero,$zero
+    1374:	00000005 	selsl $zero,$zero,$zero
+    1378:	00000006 	srlv $zero,$zero,$zero
+    137c:	00000007 	srav $zero,$zero,$zero
+    1380:	00000008 	jr $zero
+
+00001384 <tdat>:
+    1384:	00ff00ff 	0xff00ff
+
+00001388 <tdat2>:
+    1388:	ff00ff00 	sd $zero,-256($t8)
+
+0000138c <tdat3>:
+    138c:	0ff00ff0 	jal fc03fc0 <_gp+fbfac30>
+
+00001390 <tdat4>:
+    1390:	f00ff00f 	scd $t7,-4081($zero)
+
+00001394 <__testsentinel>:
+    1394:	deadbeef 	ld $t5,-16657($s5)
+
+00001398 <__teststatus>:
+    1398:	00005804 	sllv $t3,$zero,$zero
+    139c:	00000000 	nop
+Disassembly of section .reginfo:
+
+000013a0 <.reginfo>:
+    13a0:	f00700fc 	scd $a3,252($zero)
+    13a4:	00000000 	nop
+    13a8:	00000000 	nop
+    13ac:	00000000 	nop
+    13b0:	00000000 	nop
+    13b4:	00009390 	0x9390

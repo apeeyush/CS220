@@ -34,14 +34,14 @@ module mkRFile( RFile );
    Vector#(32, Reg#(Data)) rfile <- replicateM(mkConfigReg(0));
    
    method Action wr( RIndx rindx, Data data );
-      // fixme ...  
+      rfile[rindx] <= data;
    endmethod
    
    method Data rd1( RIndx rindx );
-      return ?; // fixme ...
+      return rfile[rindx]; // fixme ...
    endmethod
    
    method Data rd2( RIndx rindx );
-      return ?; //fixme ...
+      return rfile[rindx]; //fixme ...
    endmethod
 endmodule

@@ -1,0 +1,68 @@
+Warning: file 'memory.vmh' for memory 'mem' has a gap at addresses 0 to 1023.
+Warning: file 'memory.vmh' for memory 'mem' has a gap at addresses 1102 to 67108863.
+Warning: file 'memory.vmh' for memory 'mem' has a gap at addresses 0 to 1023.
+Warning: file 'memory.vmh' for memory 'mem' has a gap at addresses 1102 to 67108863.
+
+Cycle          0 ----------------------------------------------------
+
+cycle          0
+pc: 00001000 inst: (27bdffe8) expanded: addiu 1d = 1d ffe8
+
+Cycle          1 ----------------------------------------------------
+
+cycle          1
+pc: 00001004 inst: (afbf0010) expanded: sw 1d 1f 0010
+
+Cycle          2 ----------------------------------------------------
+
+cycle          2
+pc: 00001008 inst: (0c00042c) expanded: JAL 00010b0
+
+Cycle          3 ----------------------------------------------------
+
+cycle          3
+pc: 000010b0 inst: (24020001) expanded: addiu 02 = 00 0001
+
+Cycle          4 ----------------------------------------------------
+
+cycle          4
+pc: 000010b4 inst: (24030002) expanded: addiu 03 = 00 0002
+
+Cycle          5 ----------------------------------------------------
+
+cycle          5
+pc: 000010b8 inst: (14430001) expanded: bne 02 03
+
+Cycle          6 ----------------------------------------------------
+
+cycle          6
+pc: 000010c0 inst: (24020001) expanded: addiu 02 = 00 0001
+
+Cycle          7 ----------------------------------------------------
+
+cycle          7
+pc: 000010c4 inst: (24030001) expanded: addiu 03 = 00 0001
+
+Cycle          8 ----------------------------------------------------
+
+cycle          8
+pc: 000010c8 inst: (14430002) expanded: bne 02 03
+
+Cycle          9 ----------------------------------------------------
+
+cycle          9
+pc: 000010cc inst: (24020001) expanded: addiu 02 = 00 0001
+
+Cycle         10 ----------------------------------------------------
+
+cycle         10
+pc: 000010d0 inst: (14020003) expanded: bne 00 02
+
+Cycle         11 ----------------------------------------------------
+
+cycle         11
+pc: 000010e0 inst: (4080a800) expanded: mtc0 [15] = 00
+
+Cycle         12 ----------------------------------------------------
+
+cycle         12

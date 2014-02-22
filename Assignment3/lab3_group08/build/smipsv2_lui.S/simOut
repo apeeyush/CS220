@@ -1,0 +1,113 @@
+Warning: file 'memory.vmh' for memory 'mem' has a gap at addresses 0 to 1023.
+Warning: file 'memory.vmh' for memory 'mem' has a gap at addresses 1110 to 67108863.
+Warning: file 'memory.vmh' for memory 'mem' has a gap at addresses 0 to 1023.
+Warning: file 'memory.vmh' for memory 'mem' has a gap at addresses 1110 to 67108863.
+
+Cycle          0 ----------------------------------------------------
+
+cycle          0
+pc: 00001000 inst: (27bdffe8) expanded: addiu 1d = 1d ffe8
+
+Cycle          1 ----------------------------------------------------
+
+cycle          1
+pc: 00001004 inst: (afbf0010) expanded: sw 1d 1f 0010
+
+Cycle          2 ----------------------------------------------------
+
+cycle          2
+pc: 00001008 inst: (0c00042c) expanded: JAL 00010b0
+
+Cycle          3 ----------------------------------------------------
+
+cycle          3
+pc: 000010b0 inst: (3c020000) expanded: lui 02 = 00 00000000
+
+Cycle          4 ----------------------------------------------------
+
+cycle          4
+pc: 000010b4 inst: (241d0000) expanded: addiu 1d = 00 0000
+
+Cycle          5 ----------------------------------------------------
+
+cycle          5
+pc: 000010b8 inst: (241e0002) expanded: addiu 1e = 00 0002
+
+Cycle          6 ----------------------------------------------------
+
+cycle          6
+pc: 000010bc inst: (145d000d) expanded: bne 02 1d
+
+Cycle          7 ----------------------------------------------------
+
+cycle          7
+pc: 000010c0 inst: (3c02ffff) expanded: lui 02 = 00 ffff0000
+
+Cycle          8 ----------------------------------------------------
+
+cycle          8
+pc: 000010c4 inst: (3c1dffff) expanded: lui 1d = 00 ffff0000
+
+Cycle          9 ----------------------------------------------------
+
+cycle          9
+pc: 000010c8 inst: (241e0003) expanded: addiu 1e = 00 0003
+
+Cycle         10 ----------------------------------------------------
+
+cycle         10
+pc: 000010cc inst: (145d0009) expanded: bne 02 1d
+
+Cycle         11 ----------------------------------------------------
+
+cycle         11
+pc: 000010d0 inst: (3c027fff) expanded: lui 02 = 00 7fff0000
+
+Cycle         12 ----------------------------------------------------
+
+cycle         12
+pc: 000010d4 inst: (3c1d7fff) expanded: lui 1d = 00 7fff0000
+
+Cycle         13 ----------------------------------------------------
+
+cycle         13
+pc: 000010d8 inst: (241e0004) expanded: addiu 1e = 00 0004
+
+Cycle         14 ----------------------------------------------------
+
+cycle         14
+pc: 000010dc inst: (145d0005) expanded: bne 02 1d
+
+Cycle         15 ----------------------------------------------------
+
+cycle         15
+pc: 000010e0 inst: (3c028000) expanded: lui 02 = 00 80000000
+
+Cycle         16 ----------------------------------------------------
+
+cycle         16
+pc: 000010e4 inst: (3c1d8000) expanded: lui 1d = 00 80000000
+
+Cycle         17 ----------------------------------------------------
+
+cycle         17
+pc: 000010e8 inst: (241e0005) expanded: addiu 1e = 00 0005
+
+Cycle         18 ----------------------------------------------------
+
+cycle         18
+pc: 000010ec inst: (145d0001) expanded: bne 02 1d
+
+Cycle         19 ----------------------------------------------------
+
+cycle         19
+pc: 000010f0 inst: (141e0003) expanded: bne 00 1e
+
+Cycle         20 ----------------------------------------------------
+
+cycle         20
+pc: 00001100 inst: (4080a800) expanded: mtc0 [15] = 00
+
+Cycle         21 ----------------------------------------------------
+
+cycle         21

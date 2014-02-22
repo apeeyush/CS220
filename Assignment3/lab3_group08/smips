@@ -36,7 +36,7 @@
 #*/
 #
 
-CS220_HOME=../../labCode/
+CS220_HOME=/users/course/cs220/Labs/LABHOME
 
 # C Compiler
 CC="$CS220_HOME/compiler/bin/smips-gcc -B$CS220_HOME/compiler/lib/gcc-lib/smips/egcs-2.90.29/ -B$CS220_HOME/compiler/bin/ -B$CS220_HOME/compiler/smips/bin/ -G 0"
@@ -100,20 +100,20 @@ function wrappedBuild {
     cp -r $SHARED/*.b? build/bdir/
 
     bsc -u -sim -aggressive-conditions -p +:$SHARED \
-	-simdir build/bdir \
-	-info-dir build/bdir \
-	-bdir build/bdir \
-	TestBench.bsv
+  -simdir build/bdir \
+  -info-dir build/bdir \
+  -bdir build/bdir \
+  TestBench.bsv
 
     if [[ $? != 0 ]] ; then
       exit
     fi
 
     bsc -u -sim -e mkTestBench \
-	-bdir build/bdir \
-	-info-dir build/bdir \
-	-simdir build/bdir \
-	-o build/sim build/bdir/*.ba
+  -bdir build/bdir \
+  -info-dir build/bdir \
+  -simdir build/bdir \
+  -o build/sim build/bdir/*.ba
 
     if [[ $? != 0 ]] ; then
       exit
@@ -136,6 +136,7 @@ function wrappedCompile {
   $CS220_HOME/objdump2vmh.pl $build/out.dump $build/out.vmh
   if [[ $RUN == 1 ]] ; then
     wrappedRun $newprog
+    verifyPassed $newprog
   fi
 }
 
@@ -177,6 +178,63 @@ function wrappedRun {
     ./run > ./$1/runOut
   fi
   popd > /dev/null
+}
+
+function verifyPassed {
+    declare -A cksum
+    cksum["filters"]=10355638
+    cksum["median"]=1499645
+    cksum["multiply"]=3204768
+    cksum["qsort"]=3725548
+    cksum["smipsv1_addiu.S"]=2879
+    cksum["smipsv1_bne.S"]=2148
+    cksum["smipsv1_lw.S"]=5030
+    cksum["smipsv1_simple.S"]=991
+    cksum["smipsv1_sw.S"]=6174
+    cksum["smipsv2_addiu.S"]=28173
+    cksum["smipsv2_addu.S"]=58451
+    cksum["smipsv2_and.S"]=62522
+    cksum["smipsv2_andi.S"]=22166
+    cksum["smipsv2_beq.S"]=37215
+    cksum["smipsv2_bgez.S"]=11129
+    cksum["smipsv2_bgtz.S"]=11129
+    cksum["smipsv2_blez.S"]=11129
+    cksum["smipsv2_bltz.S"]=11277
+    cksum["smipsv2_bne.S"]=37215
+    cksum["smipsv2_j.S"]=2435
+    cksum["smipsv2_jal.S"]=3172
+    cksum["smipsv2_jalr.S"]=11647
+    cksum["smipsv2_jr.S"]=10171
+    cksum["smipsv2_lui.S"]=3476
+    cksum["smipsv2_lw.S"]=34030
+    cksum["smipsv2_nor.S"]=62522
+    cksum["smipsv2_or.S"]=62485
+    cksum["smipsv2_ori.S"]=23781
+    cksum["smipsv2_simple.S"]=991
+    cksum["smipsv2_sll.S"]=28942
+    cksum["smipsv2_sllv.S"]=65197
+    cksum["smipsv2_slt.S"]=58537
+    cksum["smipsv2_slti.S"]=28135
+    cksum["smipsv2_sltiu.S"]=28162
+    cksum["smipsv2_sltu.S"]=58585
+    cksum["smipsv2_sra.S"]=31048
+    cksum["smipsv2_srav.S"]=66763
+    cksum["smipsv2_srl.S"]=30010
+    cksum["smipsv2_srlv.S"]=65575
+    cksum["smipsv2_subu.S"]=58449
+    cksum["smipsv2_sw.S"]=66578
+    cksum["smipsv2_xor.S"]=62374
+    cksum["smipsv2_xori.S"]=23798
+    cksum["towers"]=1580093
+    cksum["vvadd"]=833307
+
+    echo -n "Verifying $1: "
+    mycksum=`ls -l build/$1/simOut | cut -f5 -d' '`
+    if [[ $mycksum != ${cksum[$1]} ]] ; then
+  echo "FAILED";
+    else
+  echo "PASSED";
+    fi
 }
 
 wrappedBuild

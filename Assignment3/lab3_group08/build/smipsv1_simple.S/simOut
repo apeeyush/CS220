@@ -1,0 +1,28 @@
+Warning: file 'memory.vmh' for memory 'mem' has a gap at addresses 0 to 1023.
+Warning: file 'memory.vmh' for memory 'mem' has a gap at addresses 1102 to 67108863.
+Warning: file 'memory.vmh' for memory 'mem' has a gap at addresses 0 to 1023.
+Warning: file 'memory.vmh' for memory 'mem' has a gap at addresses 1102 to 67108863.
+
+Cycle          0 ----------------------------------------------------
+
+cycle          0
+pc: 00001000 inst: (27bdffe8) expanded: addiu 1d = 1d ffe8
+
+Cycle          1 ----------------------------------------------------
+
+cycle          1
+pc: 00001004 inst: (afbf0010) expanded: sw 1d 1f 0010
+
+Cycle          2 ----------------------------------------------------
+
+cycle          2
+pc: 00001008 inst: (0c00042c) expanded: JAL 00010b0
+
+Cycle          3 ----------------------------------------------------
+
+cycle          3
+pc: 000010b0 inst: (4080a800) expanded: mtc0 [15] = 00
+
+Cycle          4 ----------------------------------------------------
+
+cycle          4
