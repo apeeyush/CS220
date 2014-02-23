@@ -44,8 +44,8 @@ function DecodedInst decode(Data inst);
         opXORI: Xor;
       endcase;
       dInst.dst  = validReg(rt);
-      dInst.src1 = rs;
-      dInst.src2 = rt;
+      dInst.src1 = validReg(rs);
+      dInst.src2 = Invalid;
       dInst.imm = Valid(case (opcode)
         opADDIU, opSLTI, opSLTIU: signExtend(imm);
         opLUI: {imm, 16'b0};
@@ -81,7 +81,7 @@ function DecodedInst decode(Data inst);
       dInst.iType = J;
       dInst.dst  = opcode == opJ ? Invalid : validReg(31);
       dInst.src1 = Invalid;
-      dInst.src2 = Imvalid;
+      dInst.src2 = Invalid;
       dInst.imm  = Valid(zeroExtend({target,2'b00}));
       dInst.brFunc = AT;
     end
