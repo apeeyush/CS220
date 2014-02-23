@@ -58,9 +58,9 @@ function DecodedInst decode(Data inst);
     begin
       dInst.iType = Ld;
       dInst.aluFunc = Add;
-      dInst.dst  = rt;
-      dInst.src1 = // fixme
-      dInst.src2 = // fixme
+      dInst.dst  = validReg(rt);
+      dInst.src1 = validReg(rs);
+      dInst.src2 = Invalid;
       dInst.imm    = Valid(signExtend(imm));
       dInst.brFunc = NT;
     end
@@ -68,10 +68,10 @@ function DecodedInst decode(Data inst);
     opSB, opSH, opSW:
     begin
       dInst.iType = St;
-      dInst.aluFunc = // fixme
-      dInst.dst  = // fixme
-      dInst.src1 = // fixme
-      dInst.src2 = // fixme
+      dInst.aluFunc = Add;
+      dInst.dst  = Invalid;
+      dInst.src1 = validReg(rs);
+      dInst.src2 = validReg(rt);
       dInst.imm    = Valid(signExtend(imm));
       dInst.brFunc = NT;
     end
@@ -79,9 +79,9 @@ function DecodedInst decode(Data inst);
     opJ, opJAL:
     begin
       dInst.iType = J;
-      dInst.dst  = // fixme ? // fixme : validReg(31)
-      dInst.src1 = // fixme
-      dInst.src2 = // fixme
+      dInst.dst  = opcode == opJ ? Invalid : validReg(31);
+      dInst.src1 = Invalid;
+      dInst.src2 = Imvalid;
       dInst.imm  = Valid(zeroExtend({target,2'b00}));
       dInst.brFunc = AT;
     end
@@ -98,9 +98,8 @@ function DecodedInst decode(Data inst);
       endcase;
       dInst.dst  = Invalid;
       dInst.src1 = validReg(rs);
-      dInst.src2 = (opcode==opBEQ || opcode==opBNE) ? // fixme 
-                                                    : // fixme 
-      dInst.imm  = // fixme
+      dInst.src2 = (opcode==opBEQ || opcode==opBNE) ? validReg(rt) : Invalid;
+      dInst.imm  = Valid(signExtend(imm) << 2);
     end
     
     opRS: 
@@ -132,11 +131,11 @@ function DecodedInst decode(Data inst);
       fcJR, fcJALR:
       begin
         dInst.iType = Jr;
-        dInst.dst  = funct == fcJR ? Invalid: // fixme
-        dInst.src1 = // fixme
-        dInst.src2 = // fixme
-        dInst.imm  = // fixme
-        dInst.brFunc = // fixme
+        dInst.dst  = funct == fcJR ? Invalid: validReg(rd);
+        dInst.src1 = validReg(rs);
+        dInst.src2 = Invalid;
+        dInst.imm  = Invalid;
+        dInst.brFunc = AT;
       end
       
       fcSLL, fcSRL, fcSRA:
@@ -144,14 +143,14 @@ function DecodedInst decode(Data inst);
         dInst.iType = Alu;
         dInst.aluFunc = case (funct)
           fcSLL: LShift;
-          fcSRL: // fixme
-          fcSRA: // fixme
+          fcSRL: RShift;
+          fcSRA: Sra;
         endcase;
-        dInst.dst  = // fixme
-        dInst.src1 = // fixme
+        dInst.dst  = validReg(rd);
+        dInst.src1 = validReg(rt);
         dInst.src2 = Invalid;
         dInst.imm  = Valid(zeroExtend(shamt));
-        dInst.brFunc = // fixme
+        dInst.brFunc = NT;
       end
 
       fcSLLV, fcSRLV, fcSRAV: 
@@ -166,27 +165,27 @@ function DecodedInst decode(Data inst);
         dInst.src1 = validReg(rt);
         dInst.src2 = validReg(rs);
         dInst.imm  = Invalid;
-        dInst.brFunc = // fixme
+        dInst.brFunc = NT;
       end
 
       fcADDU, fcSUBU, fcAND, fcOR, fcXOR, fcNOR, fcSLT, fcSLTU:
       begin
         dInst.iType = Alu;
         dInst.aluFunc = case (funct)
-          fcADDU: // fixme
-          fcSUBU: // fixme
-          fcAND : // fixme
-          fcOR  : // fixme
-          fcXOR : // fixme
-          fcNOR : // fixme
-          fcSLT : // fixme
-          fcSLTU: // fixme
+          fcADDU: Add;
+          fcSUBU: Sub;
+          fcAND : And;
+          fcOR  : Or;
+          fcXOR : Xor;
+          fcNOR : Nor;
+          fcSLT : Slt;
+          fcSLTU: Sltu;
         endcase;
-        dInst.dst  = // fixme
-        dInst.src1 = // fixme
-        dInst.src2 = // fixme
-        dInst.imm  = // fixme
-        dInst.brFunc = // fixme
+        dInst.dst  = validReg(rd);
+        dInst.src1 = validReg(rs);
+        dInst.src2 = validReg(rt);
+        dInst.imm  = Invalid;
+        dInst.brFunc = NT;
       end
 
       default: 
@@ -213,8 +212,8 @@ function DecodedInst decode(Data inst);
    
   // Hardwired Zero in R0
   if(dInst.dst matches tagged Valid .dst &&& dst.regType == Normal 
-     &&& // fixme
-    dInst.dst = // fixme
+     &&& dst.idx == 0)
+    dInst.dst = tagged Invalid;
 
   return dInst;
 endfunction
