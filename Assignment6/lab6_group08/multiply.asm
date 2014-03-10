@@ -76,8 +76,14 @@ main:
 			jal     multiply		            # multiply
 			move    $a0, $v0	
 			jal     list_reverse  	         	# reverse output list
+			move 	$t0, $v0
 		# Print the result
-			move    $a0, $v0
+			# Print the message
+				la $a0, ans_msg
+				li $v0, 4
+				syscall
+			# Then the value
+			move    $a0, $t0
 			jal     list_print              	# print the output list
 		# Exit
 			li      $v0, 10
@@ -104,7 +110,7 @@ multiply:
 # $s1 stores the HEAD of list b
 # $s2 stores the HEAD of output
 # $s3 stores the current node in b
-# $s4 stores the count
+# $s4 stores the count of loop
 # $s5 save the node address $s4 in output list incase $s4.next is a NULL node
 # $s6 is the current running node in of a in the innerloop
 # $s7 is the current running node in of the output list in the innerloop
@@ -128,7 +134,6 @@ multiply:
 		move  $s3, $s1		            			# current node in multiplier
 		li    $s4, 0                  				# initialize count to 0
 
-# Creating the output list
 multiply_loop:
 	lw    $t1, ($s3)
 	li    $t2, -1
@@ -150,11 +155,11 @@ multiply_loop_escape:
 multiply_innerloop:
 	lw    $t1, ($s6)
 	li    $t2, -1
-	beq   $t1, $t2, multiply_innerloop_break	  		# if last a is reached, break innerloop
+	beq   $t1, $t2, multiply_innerloop_break	  	# if last a is reached, break innerloop
 
 	li    $t2, -1
-	lw    $t1, ($s7)			        			# load no. stored in $s4
-	beq   $t1, $t2, multiply_innerloop_addnode		# if($s4.num == -1) save $s4 in $s5
+	lw    $t1, ($s7)			        			# load number stored in $s4
+	beq   $t1, $t2, multiply_innerloop_addnode
 
 	lw    $t0, ($s3)				  				# Value of current node in list b
 	lw    $t1, ($s6)								# Value of current node in list a
@@ -170,6 +175,7 @@ multiply_innerloop:
 
 	j     multiply_innerloop 
 
+	# Only if $s4.num == -1 i.e. line 162 is true
 	multiply_innerloop_addnode:
 		# prev. of $s4 i.e. the last non-NULL node is stored in $s5
 		lw    $t0, ($s3)
@@ -215,30 +221,30 @@ multiply_format:
 	beq   $t2, $t4, multiply_end
 
 	li    $t3, 10
-	div   $t2, $t3	          	    # $t2/10
-	mfhi  $t3	                    # move remainder to $t3
-	sw    $t3, ($t0)	            # store the remainder in current node
+	div   $t2, $t3	          	    			# $t2/10
+	mfhi  $t3	                    			# move remainder to $t3
+	sw    $t3, ($t0)	            			# store the remainder in current node
 
 	li    $t3, -1
-	lw    $t6, 4($t0)	            # load the address of next node
-	lw    $t2, ($t6)	            # load the next number
-	beq   $t2, $t3, multiply_format_addnode	  # add a node if this dosent work
+	lw    $t6, 4($t0)	            			# load the address of next node
+	lw    $t2, ($t6)	            			# load the next number
+	beq   $t2, $t3, multiply_format_addnode	  	# add a node if this dosent work
 
-	mflo  $t3	                    # move quotient in $t3
+	mflo  $t3	                    			# move quotient in $t3
 	add   $t3, $t3, $t2
-	sw    $t3, ($t6)	            # update the next node
+	sw    $t3, ($t6)	            			# update the next node
 
-	lw    $t0, 4($t0)	            # increment $t0
+	lw    $t0, 4($t0)	            			# increment $t0
 	j     multiply_format
 
 multiply_format_addnode:
 	mflo  $a1	
 	move  $a0, $s2
 	jal   list_add
-	move  $a0, $s2           		# append the quotient to the list
+	move  $a0, $s2           					# append the quotient to the list
 	li    $a1, -1
 	jal   list_search
-	move  $t0, $v0					# the last node the next $t0
+	move  $t0, $v0								# the last node the next $t0
 	j     multiply_format
 
 # Restore old values as multiplication has finished and return output head in $v0
