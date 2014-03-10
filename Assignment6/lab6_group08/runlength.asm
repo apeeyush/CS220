@@ -55,7 +55,7 @@ list_create:
 #list_add function that takes head and the number in $a0 and $a1 and appends the number at the last position
 .text
 list_add:
-	add $sp,$sp,-8
+	addi $sp,$sp,-8
 	sw $s0,($sp)
 	sw $ra,4($sp)
 
@@ -69,7 +69,7 @@ list_add:
 
 	lw $s0, ($sp)
 	lw $ra, 4($sp)
-	add $sp, $sp, 8
+	addi $sp, $sp, 8
 	jr $ra
 	
 		
@@ -129,7 +129,7 @@ list_print_end:
 .text
 runlength:
   #store values
-  add $sp, $sp, -24
+  addi $sp, $sp, -24
   sw    $s0, ($sp)	#stores the current element of the list
   sw    $s1, 4($sp)	#stores the current number
   sw    $s2, 8($sp)	#stores the current number's count
