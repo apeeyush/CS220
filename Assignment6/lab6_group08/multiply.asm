@@ -19,8 +19,6 @@ main:
 			li      $v0, 5
 			syscall			                    # read number
 			move    $s1, $v0
-			li      $t0, 0
-			blt     $s1, $t0, main_fwd_a	  # if input< 0 end input cycle
 			li      $t0, 9
 			bgt     $s1, $t0, main_fwd_a	  # if input > 9 end input cycle
 			move    $a0, $s0
@@ -28,18 +26,16 @@ main:
 			jal     list_add
 			j       main_loop_a
 	# Now Create second list and save list head in $s2
-		main_fwd_a:	
+		main_fwd_a:
 			jal     list_create
-		move    $s2, $v0
+			move    $s2, $v0
 
 		main_loop_b:
 			li      $v0, 5
 			syscall			                    # read number
 			move    $s1, $v0
-			li      $t0, 0
-			blt     $s1, $t0, main_fwd	#if input< 0 end input cycle
 			li      $t0, 9		
-			bgt     $s1, $t0, main_fwd	#if input > 9 end input cycle
+			bgt     $s1, $t0, main_fwd			#if input > 9 end input cycle
 			move    $a0, $s2	
 			move    $a1, $s1
 			jal     list_add
@@ -60,7 +56,7 @@ main:
 			# Reverse the list
 				move    $a0, $s0
 				jal     list_reverse
-			move    $s0, $v0		            # reverse a
+			move    $s0, $v0
 		# Printing list b and then reversing it
 			# Print list b
 				# First the message
@@ -94,7 +90,6 @@ main:
 # $a1 = Head of list b
 # The input lists must have numbers such that the LSB occurs first and MSB occurs last. 
 # The output list is formatted in the same way.
-# Routines called: list_create, list_add_end, list_search
 
 .text
 multiply:
@@ -111,8 +106,8 @@ multiply:
 # $s3 stores the current node in b
 # $s4 stores the count
 # $s5 save the node address $s4 in output list incase $s4.next is a NULL node
-# $s6 is the current running node in of multiplicand(a) in the subloop
-# $s7 is the current running node in of the output list in the subloop
+# $s6 is the current running node in of a in the innerloop
+# $s7 is the current running node in of the output list in the innerloop
 
 	move  $s0, $a0		# save HEAD of a
 	move  $s1, $a1		# save HEAD of b
@@ -149,17 +144,17 @@ multiply_loop_init:
 	j     multiply_loop_init
 
 multiply_loop_escape:	
-	move  $s6, $s0									# initialize current running node in the subloop
-	
+	move  $s6, $s0									# initialize current running node in the innerloop
 
-multiply_subloop:
+
+multiply_innerloop:
 	lw    $t1, ($s6)
 	li    $t2, -1
-	beq   $t1, $t2, multiply_subloop_break	  		# if last a is reached, break subloop
+	beq   $t1, $t2, multiply_innerloop_break	  		# if last a is reached, break innerloop
 
 	li    $t2, -1
 	lw    $t1, ($s7)			        			# load no. stored in $s4
-	beq   $t1, $t2, multiply_subloop_addnode		# if($s4.num == -1) save $s4 in $s5
+	beq   $t1, $t2, multiply_innerloop_addnode		# if($s4.num == -1) save $s4 in $s5
 
 	lw    $t0, ($s3)				  				# Value of current node in list b
 	lw    $t1, ($s6)								# Value of current node in list a
@@ -173,9 +168,9 @@ multiply_subloop:
 	lw    $s7, 4($s7)						        # increment current output node
 	lw    $s6, 4($s6)			        			# increment current node in a
 
-	j     multiply_subloop 
+	j     multiply_innerloop 
 
-	multiply_subloop_addnode:
+	multiply_innerloop_addnode:
 		# prev. of $s4 i.e. the last non-NULL node is stored in $s5
 		lw    $t0, ($s3)
 		lw    $t1, ($s6)
@@ -195,9 +190,10 @@ multiply_subloop:
 		move  $s7, $v0									# the last node is the new $s7
 		lw    $s6, 4($s6)		          				# increment current node in a
 
- 		j     multiply_subloop
+ 		j     multiply_innerloop
 
-multiply_subloop_break:
+# Inner loop has finished so increment current node in b and jump to multiply_loop
+multiply_innerloop_break:
 	lw    $s3, 4($s3)								# Increment current node in b
 	addi  $s4, $s4, 1								# Increment the count by 1
 	j     multiply_loop
