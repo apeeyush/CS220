@@ -32,7 +32,7 @@ main:
 			jal     list_create
 		move    $s2, $v0
 
-		main_loop:
+		main_loop_b:
 			li      $v0, 5
 			syscall			                    # read number
 			move    $s1, $v0
@@ -43,30 +43,47 @@ main:
 			move    $a0, $s2	
 			move    $a1, $s1
 			jal     list_add
-			j       main_loop	
+			j       main_loop_b
 
 		main_fwd:
 		# Print lists to ensure that input is entered correctly
 		# and then reverse lists before multiplication
-			move    $a0, $s0
-			jal     list_print		          	# print a
-			move    $a0, $s0
-			jal     list_reverse
+		# Printing list a and then reversing it
+			# Print list a
+				# First the message
+					la $a0, print_a
+					li $v0, 4
+					syscall
+				# Then the value
+					move    $a0, $s0
+					jal     list_print
+			# Reverse the list
+				move    $a0, $s0
+				jal     list_reverse
 			move    $s0, $v0		            # reverse a
-			
-			move    $a0, $s2
-			jal     list_print			        # print b
-			move    $a0, $s2
-			jal     list_reverse
-			move    $s2, $v0		            # reverse b
-	
+		# Printing list b and then reversing it
+			# Print list b
+				# First the message
+					la $a0, print_b
+					li $v0, 4
+					syscall
+				# Then the value
+					move    $a0, $s2
+					jal     list_print
+			# Reverse the list
+				move    $a0, $s2
+				jal     list_reverse
+				move    $s2, $v0		            # reverse b
+		# Multiplication Step
 			move    $a0, $s0
 			move    $a1, $s2
 			jal     multiply		            # multiply
 			move    $a0, $v0	
 			jal     list_reverse  	         	# reverse o/p
+		# Print the result
 			move    $a0, $v0
 			jal     list_print              	# print the o/p list
+		# Exit
 			li      $v0, 10
 			syscall			                    # end program
 
@@ -412,3 +429,6 @@ list_print_end:
 info_msg: .asciiz "This assembly program multiplies two numbers \nThe input format is as specified in the question\n"
 print_newline: .asciiz "\n"
 space: .asciiz " "
+print_a: .asciiz "List a is : "
+print_b: .asciiz "List b is : "
+ans_msg: .asciiz "The answer is : "
