@@ -89,34 +89,26 @@ main:
 
 
 # multiply
-#
-# Description: This routine takes two singly-linked lists of 
-# non-negative integers as input (HEADS in $a0 and $a1) and returns the
-# multiplication of them in the form of another list (HEAD in $v0).
-# In case any of its arguments is an empty list, the output is the HEAD
-# of the empty input list (If both inputs are empty, the output is $a0)
-# This is a leaf-type routine as it calls other routines.
-# Let the number in the list pointed by $a0 be a and that by $a1 be b.
-# NOTE: The i/p lists must have numbers such that the LSB occurs first
-# and MSB occurs last. The o/p list is formatted in the same way.
-#
-# Routines called: list_create, list_add, list_search
-# Stack Frame Sections: saved registers(8), return address(1)
+# It takes two singly-linked lists as input and returns multiplication as linked list.
+# $a0 = HEAD of list a
+# $a1 = Head of list b
+# The input lists must have numbers such that the LSB occurs first and MSB occurs last. 
+# The output list is formatted in the same way.
+# Routines called: list_create, list_add_end, list_search
 
 .text
 multiply:
-	# start of prologue
-	addiu $sp, $sp, -36
+# Save the values in $s0, $s1, $s2 and $ra as they will get modified during the run of multiplication.
+	addiu $sp, $sp, -16
 	sw    $s0, ($sp)
 	sw    $s1, 4($sp)
 	sw    $s2, 8($sp)
-	sw    $ra, 32($sp)	
-	# end of prologue
+	sw    $ra, 12($sp)
 
-# $s0 stores the HEAD of a (multiplicand)
-# $s1 stores the HEAD of b (multiplier)
+# $s0 stores the HEAD of list a
+# $s1 stores the HEAD of list b
 # $s2 stores the HEAD of output
-# $s3 stores the current node in multiplier (b)
+# $s3 stores the current node in b
 # $s4 stores the count
 # $s5 save the node address $s4 in o/p list incase $s4.next is a NULL node
 # $s6 is the current running node in of multiplicand(a) in the subloop
@@ -218,63 +210,58 @@ multiply_subloop_break:
 	addi  $s4, $s4, 1		          # CHECK OVERFLOW ISSUES
 	j     multiply_loop		        # loop the main loop
 
-# REFINING THE O/P LIST (i.e. all the elements of it are digits
-# $t0 contains the current node in the o/p
-# $t1 is the carry
+
+# Multiplication has been done. Now we need to shift carry values to next nodes in linked list
+# multiply_format will format the answer linked list in correct format
+# $t0 contains the current node
+# $t1 contains the carry
 
 multiply_fwd:
 	move  $t0, $s2
 
-multiply_refine:
+multiply_format:
 	lw    $t2, ($t0)
+
+ 	# end if the format is completed	
 	li    $t4, -1
-	beq   $t2, $t4, multiply_end 	# end if the refinement is completed
+	beq   $t2, $t4, multiply_end
 
 	li    $t3, 10
-	div   $t2, $t3	              # $t2/10
-	mfhi  $t3	                    # move remainder
-	sw    $t3, ($t0)	            # store in current node
-	
+	div   $t2, $t3	          	    # $t2/10
+	mfhi  $t3	                    # move remainder to $t3
+	sw    $t3, ($t0)	            # store the remainder in current node
+
 	li    $t3, -1
 	lw    $t6, 4($t0)	            # load the address of next node
 	lw    $t2, ($t6)	            # load the next number
-	beq   $t2, $t3, multiply_refine_addnode	  # add a node if this dosent work	
-	#else
+	beq   $t2, $t3, multiply_format_addnode	  # add a node if this dosent work
 
-	mflo  $t3	                    # move quotient
-	add   $t3, $t3, $t2	          # (* CHECK OVERFLOW ISSUES *)
-
+	mflo  $t3	                    # move quotient in $t3
+	add   $t3, $t3, $t2
 	sw    $t3, ($t6)	            # update the next node
 
 	lw    $t0, 4($t0)	            # increment $t0
-	j     multiply_refine
+	j     multiply_format
 
-multiply_refine_addnode:
+multiply_format_addnode:
 	mflo  $a1	
 	move  $a0, $s2
-	jal   list_add           # append the quotient to the list
-	move  $a0, $s2
+	jal   list_add
+	move  $a0, $s2           		# append the quotient to the list
 	li    $a1, -1
 	jal   list_search
-	move  $t0, $v0	              # the last node the next $t0
-	j     multiply_refine
-	
+	move  $t0, $v0					# the last node the next $t0
+	j     multiply_format
+
+# Restore old values as multiplication has finished and return output head in $v0
 multiply_end:
 	move  $v0, $s2
-	# start of epilogue
 	lw    $s0, ($sp)
 	lw    $s1, 4($sp)
 	lw    $s2, 8($sp)
-	lw    $ra, 32($sp)
-	addiu $sp, $sp, 36
+	lw    $ra, 12($sp)
+	addiu $sp, $sp, 16
 	jr    $ra
-	# end of epilogue
-
-#**********************************************************************
-#	End of multiply.asm
-#**********************************************************************
-
-
 
 	
 #----------------------------------------------------------------------
