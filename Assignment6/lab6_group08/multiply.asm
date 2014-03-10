@@ -79,10 +79,10 @@ main:
 			move    $a1, $s2
 			jal     multiply		            # multiply
 			move    $a0, $v0	
-			jal     list_reverse  	         	# reverse o/p
+			jal     list_reverse  	         	# reverse output list
 		# Print the result
 			move    $a0, $v0
-			jal     list_print              	# print the o/p list
+			jal     list_print              	# print the output list
 		# Exit
 			li      $v0, 10
 			syscall			                    # end program
@@ -110,9 +110,9 @@ multiply:
 # $s2 stores the HEAD of output
 # $s3 stores the current node in b
 # $s4 stores the count
-# $s5 save the node address $s4 in o/p list incase $s4.next is a NULL node
+# $s5 save the node address $s4 in output list incase $s4.next is a NULL node
 # $s6 is the current running node in of multiplicand(a) in the subloop
-# $s7 is the current running node in of the o/p list in the subloop
+# $s7 is the current running node in of the output list in the subloop
 
 	move  $s0, $a0		# save HEAD of a
 	move  $s1, $a1		# save HEAD of b
@@ -149,67 +149,58 @@ multiply_loop_init:
 	j     multiply_loop_init
 
 multiply_loop_escape:	
-	move  $s6, $s0			
-			# initialize current running node in the subloop
+	move  $s6, $s0									# initialize current running node in the subloop
 	
 
 multiply_subloop:
 	lw    $t1, ($s6)
 	li    $t2, -1
-	beq   $t1, $t2, multiply_subloop_break	  # if last a is reached, break subloop
+	beq   $t1, $t2, multiply_subloop_break	  		# if last a is reached, break subloop
 
 	li    $t2, -1
-	lw    $t1, ($s7)			        # load no. stored in $s4
-	beq   $t1, $t2, multiply_subloop_addnode	# if($s4.num == -1) save $s4 in $s5
+	lw    $t1, ($s7)			        			# load no. stored in $s4
+	beq   $t1, $t2, multiply_subloop_addnode		# if($s4.num == -1) save $s4 in $s5
 
-	# if s7.num != -1
-	lw    $t0, ($s3)
-	lw    $t1, ($s6)
+	lw    $t0, ($s3)				  				# Value of current node in list b
+	lw    $t1, ($s6)								# Value of current node in list a
 	mult  $t0, $t1
-	mflo  $t0		                  # multiply digits $s6.num * $s3.num , store in $t0
+	mflo  $t0		                  				# multiply digits and store in $t0
 
-	lw    $t1, ($s7)		          # load the current number in o/p node
+	lw    $t1, ($s7)								# load the current number in output node
+	add   $t0, $t0, $t1						        # add the numbers
 
-	#(* NOTE: ADD CHECK FOR OVERFLOW *)	
-	add   $t0, $t0, $t1		        # add the nos. 
+	sw    $t0, ($s7)
+	lw    $s7, 4($s7)						        # increment current output node
+	lw    $s6, 4($s6)			        			# increment current node in a
 
-	sw    $t0, ($s7)			        # update the o/p node
-	lw    $s7, 4($s7)			        # increment $s7
-	lw    $s6, 4($s6)			        # increment $s6
-
-	#(* REMARK: $s5, the backup prev. register is not used *)
 	j     multiply_subloop 
 
-multiply_subloop_addnode:
-  # if s7.num == -1
-	# prev. of $s4 i.e. the last non-NULL node is stored in $s5
-	lw    $t0, ($s3)
-	lw    $t1, ($s6)
-	mult  $t0, $t1		            # multiply $s6.num * $s3.num
-	mflo  $t0		                  # $t0 stores the result
-                                # (hi = 0 since we multiplying digits)
+	multiply_subloop_addnode:
+		# prev. of $s4 i.e. the last non-NULL node is stored in $s5
+		lw    $t0, ($s3)
+		lw    $t1, ($s6)
+		mult  $t0, $t1									# multiply $s6.num * $s3.num
+		mflo  $t0										# $t0 stores the result
 
-	move  $a0, $s2
-	move  $a1, $t0		            # need to add a node with val $t0
+		# need to add a node with val $t0
+		move  $a0, $s2
+		move  $a1, $t0
+		jal   list_add
 
-	jal   list_add
-	
-	# the new $s7 is the last node
-	move  $a0, $s2
-	li    $a1, -1
-	jal   list_search
-	
-	move  $s7, $v0		            # the last node is the new $s7
-	lw    $s6, 4($s6)		          # increment $s6
-	
+		# the new $s7 is the last node
+		move  $a0, $s2
+		li    $a1, -1
+		jal   list_search
 
- 	j     multiply_subloop
-	
+		move  $s7, $v0									# the last node is the new $s7
+		lw    $s6, 4($s6)		          				# increment current node in a
+
+ 		j     multiply_subloop
+
 multiply_subloop_break:
-  # break the subloop
-	lw    $s3, 4($s3)
-	addi  $s4, $s4, 1		          # CHECK OVERFLOW ISSUES
-	j     multiply_loop		        # loop the main loop
+	lw    $s3, 4($s3)								# Increment current node in b
+	addi  $s4, $s4, 1								# Increment the count by 1
+	j     multiply_loop
 
 
 # Multiplication has been done. Now we need to shift carry values to next nodes in linked list
