@@ -150,7 +150,7 @@ runlength_loop:
   beq   $s3, $t1, runlength_end   # if the end is reached then return
   beq   $s3, $s1 runlength_increment	# Increment if same number
   # If new number, add current number and its count to the output list
-  beq   $s1, $t1, runlength_fwd   # Initially, $s1=-1,which should not be considered, so skip ahead
+  beq   $s1, $t1, runlength_skip   # Initially, $s1=-1,which should not be considered, so skip ahead
   
   move  $a0, $s4
   move  $a1, $s2
@@ -159,7 +159,7 @@ runlength_loop:
   move  $a1, $s1
   jal   list_add              # next add the number to  list
 
-runlength_fwd:
+runlength_skip:
   move  $s1, $s3				# save the new number in $s1
   li    $s2, 1					# reset the new counter to 1
   lw    $s0, 4($s0)				# goto the next node in i/p list
