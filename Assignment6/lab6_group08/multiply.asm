@@ -25,7 +25,7 @@ main:
 			bgt     $s1, $t0, main_fwd_a	  # if input > 9 end input cycle
 			move    $a0, $s0
 			move    $a1, $s1
-			jal     list_add_end
+			jal     list_add
 			j       main_loop_a
 	# Now Create second list and save list head in $s2
 		main_fwd_a:	
@@ -42,7 +42,7 @@ main:
 			bgt     $s1, $t0, main_fwd	#if input > 9 end input cycle
 			move    $a0, $s2	
 			move    $a1, $s1
-			jal     list_add_end
+			jal     list_add
 			j       main_loop	
 
 		main_fwd:
@@ -83,7 +83,7 @@ main:
 # NOTE: The i/p lists must have numbers such that the LSB occurs first
 # and MSB occurs last. The o/p list is formatted in the same way.
 #
-# Routines called: list_create, list_add_end, list_search
+# Routines called: list_create, list_add, list_search
 # Stack Frame Sections: saved registers(8), return address(1)
 
 .text
@@ -182,7 +182,7 @@ multiply_subloop_addnode:
 	move  $a0, $s2
 	move  $a1, $t0		            # need to add a node with val $t0
 
-	jal   list_add_end
+	jal   list_add
 	
 	# the new $s7 is the last node
 	move  $a0, $s2
@@ -235,7 +235,7 @@ multiply_refine:
 multiply_refine_addnode:
 	mflo  $a1	
 	move  $a0, $s2
-	jal   list_add_end            # append the quotient to the list
+	jal   list_add           # append the quotient to the list
 	move  $a0, $s2
 	li    $a1, -1
 	jal   list_search
@@ -258,231 +258,6 @@ multiply_end:
 #**********************************************************************
 
 
-
-#****************************************************************************************************
-#
-# This is a collection of preliminary operations on singly-linked lists containing positive integers.
-# These routines were written in MIPS32 assembly language.
-# NULL is defined as the node that contains the number -1.
-# If the register $t0 points to a node in the list, then ($t0) is the number(>= -1) stored in the node,
-# and 4($tp) is the location where the address of the next node is stored.	   
-#
-# 1. list_create.asm
-#	Creates a NULL initialized list and returns its HEAD.	
-# 2. list_add_beg.asm
-#	Adds a node to the beginning of the list containing the number in the argument ($a1) 
-#	and returns the new HEAD.
-# 3. list_add_end.asm
-#	Adds a node at the end of the list containing the number in $a1. No return	
-# 4. list_delete.asm
-#	Deletes the node pointed to by the register $a1, and returns the new HEAD.
-# 5. list_search.asm
-#	Searches the list for a node containing the number in $a1. If found, the index of the
-#	first encounter while travelling from the HEAD is returned. If not found, then the address
-#	of the TAIL (a NULL node) is returned in $v0. 
-#	NOTE: When searching for '-1' (i.e. the TAIl node), it returns the address of TAIL correctly.	
-# 6. list_print.asm
-#	Print the contents of a list in  a line.
-# 7. list_reverse.asm
-#	Reverses a given list.
-#
-#----------------------------------------------------------------------
-# List function: 	list_create
-# Arguments: 		NONE
-# Return:		Returns the address of a -1 initialized list
-#			in register $v0.
-# Rountine called:	NONE
-# Routine type:		leaf
-# Stack Frame Sections:	NONE 
-#----------------------------------------------------------------------		
-
-
-.text
-list_create:
-	li $a0, 8		#Need 8 bytes assigned, first for number
-				#second byte for the pointer to next node.
-	li $v0, 9
-	syscall			#call sbrk, HEAD in $v0
-	li $t1, -1
-	sw $t1, ($v0)		#store -1 in the 'int' section (empty list)
-	jr $ra
-			
-#----------------------------------------------------------------------
-# List function: 	list_add_beg	
-# Arguments: 		HEAD ($a0), number($a1)
-# Return:		HEAD ($v0)	
-# Rountine called:	list_create	
-# Routine type:		leaf	
-# Stack Frame Sections:	saved register(2), return address(1) 
-#----------------------------------------------------------------------		
-
-.text
-list_add_beg:
-	#start of prologue
-	addiu $sp, $sp, -12
-	sw $s0, ($sp)
-	sw $s1, 4($sp)
-	sw $ra, 8($sp)
-	#end of prologue
-
-	move $s0, $a0
-	move $s1, $a1	
-	jal list_create		#create an -1 node
-	move $t0, $v0
-	sw $s1, ($t0)		#initialize it to the number
-	sw $s0, 4($t0)		#make the prev HEAD next to this node
-	move $v0, $t0	
-
-	#start of epilogue
-	lw $s0, ($sp)
-	lw $s1, 4($sp)
-	lw $ra, 8($sp)
-	addiu $sp, $sp, 12
-	jr $ra
-	#end of epilogue
-
-#----------------------------------------------------------------------
-# List function: 	list_add_end	
-# Arguments: 		HEAD ($a0), number($a1)
-# Return:		NONE	
-# Rountine called:	list_search, list_create	
-# Routine type:		non-leaf	
-# Stack Frame Sections:	saved register(1), return address(1) 
-#----------------------------------------------------------------------		
-
-.text
-list_add_end:
-	#start of prologue
-	addiu $sp, $sp, -8
-	sw $s0, ($sp)
-	sw $ra, 4($sp)
-	#end of prologue
-
-	move $s0, $a1		#save $a1 in $s0
-	li $a1, -1
-	jal list_search
-	move $t0, $v0		#save the index of last node in $t0
-	sw $s0, ($t0)		#store the current number in last node
-	jal list_create
-	sw $v0, 4($t0)		#point to the last node which is empty		
-
-	#start of epilogue
-	lw $s0, ($sp)
-	lw $ra, 4($sp)
-	addiu $sp, $sp, 8
-	jr $ra
-	#end of epilogue
-
-#----------------------------------------------------------------------
-# List function: 	list_delete	
-# Arguments: 		HEAD($a0),index($a1)
-# Return:		HEAD($v0)
-# Rountine called:	NONE
-# Routine type:		leaf
-# Stack Frame Sections:	NONE 
-#----------------------------------------------------------------------		
-
-.text
-list_delete:
-	li $t0, -1
-	lw $t1, ($a1)
-	beq $t0, $t1, list_delete_none #if  NUll is $a1, dont do anything
-
-	beq $a0, $a1, list_delete_head	#the head is to be deleted
-	move $t0, $a0			#initialize $t0 to HEAD
-	
-#$t0 is the current index, $t2 is the previous index in this loop
-list_delete_loop:
-	beq $t0, $a1, list_delete_fwd
-	move $t2, $t0
-	lw $t0, 4($t0)		#goto the next node
-	j list_delete_loop
-
-list_delete_fwd:
-	# $t2 now stores the index prev to $a1 if it is not HEAD
-	lw $t0, 4($a1)		#store the next index of the to-be-deleted in $t0
-	sw $t0, 4($t2)		#link the next of $a1 to the prev.
-	j list_delete_none
-
-list_delete_head:
-	#Hence, the node to be deleted is the HEAD
-	lw $v0, 4($a0)
-	jr $ra			#return the next index as HEAD 
-
-list_delete_none:
-	move $v0, $a0		#return the HEAD as usual
-	jr $ra			#return
-
-#----------------------------------------------------------------------
-# List function: 	list_search	
-# Arguments: 		HEAD($a0), number to be searched($a1)
-# Return:		index($v0) if the positive number was found
-#			$v0 is the tail address if not-found
-# Rountine called:	NONE
-# Routine type:		leaf
-# Stack Frame Sections:	NONE 
-#----------------------------------------------------------------------		
-
-.text
-list_search:
-	lw $t1, ($a0)		#whats in HEAD to $t1
-	move $t0, $a0
-	beq $t1, $a1, list_search_end	#when found end
-
-	move $t0, $a0		#initialize current index to HEAD	
-list_search_loop:
-	lw $t1, ($t0)		#store the no. in current node in $t1
-	li $t2, -1		
-	beq $t1, $a1, list_search_end		#return if found
-	beq $t1, $t2, list_search_end		#not found, return the address of tail 
-	lw $t0 , 4($t0)				#if not load the next index
-	j list_search_loop
-
-list_search_end:
-	move $v0, $t0 
-	jr $ra
-
-
-#----------------------------------------------------------------------
-# List function: 	list_print	
-# Arguments: 		HEAD($a0) of list to be printed	
-# Return:		NONE	
-# Rountine called:	NONE
-# Routine type:		leaf
-# Stack Frame Sections:	NONE 
-#----------------------------------------------------------------------		
-
-.text
-list_print:
-	move $t0, $a0		#save the HEAD in $t0
-	la $a0, print_newline
-	li $v0, 4
-	syscall			#print a newline
-	# print the output list	
-	#$t0 points at the current o/p node, initialized at HEAD
-
-list_print_loop:
-	li $t1, -1
-	lw $t2, ($t0)
-	beq $t1, $t2, list_print_end	#if end of o/p list reached, end
-	move $a0, $t2
-	li $v0, 1		
-	syscall			#print output number
-	la $a0, print_space	
-	li $v0, 4
-	syscall			#print space
-	lw $t0, 4($t0)
-	j list_print_loop	#print loop	
-
-list_print_end:
-	la $a0, print_newline
-	li $v0, 4
-	syscall			#print newline
-	jr $ra
-
-.data
-print_newline: .asciiz "\n"
-print_space: .asciiz " "
 
 	
 #----------------------------------------------------------------------
@@ -550,12 +325,90 @@ list_reverse_epi:
 	jr $ra
 	#end of epilogue
 
+#We have developed the necessary helper functions to create a modular design. They are given henceforth.
 
-#*********************** End of List functions ************************************
+#list_create function that returns address of an unitialized list set to -1 in register $v0
+.text
+list_create:
+	li $v0, 9			#allocate memory
+	li $a0, 8			#of size 8 bytes
+	syscall				#call sbrk, Head stored in $v0
+	li $t1, -1
+	sw $t1, ($v0)		#store -1 in the 'int' section
+	jr $ra				
+	
+#list_add function that takes head and the number in $a0 and $a1 and appends the number at the last position
+.text
+list_add:
+	add $sp,$sp,-8
+	sw $s0,($sp)
+	sw $ra,4($sp)
+
+	move $s0, $a1		#store $a1 in $s0
+	li $a1, -1
+	jal list_search
+	move $t0, $v0		#store the index of last node in $t0
+	sw $s0, ($t0)		#store the number currently read in the last node
+	jal list_create
+	sw $v0, 4($t0)		#point to the last node(empty)
+
+	lw $s0, ($sp)
+	lw $ra, 4($sp)
+	add $sp, $sp, 8
+	jr $ra
+	
+		
+#list_search function to take list and number to be searched, and return the position at which the number is found
+.text
+list_search:
+	lw $t1, ($a0)		#stores Head in $t1
+	move $t0, $a0
+	beq $t1, $a1, list_search_end	#when they are equal, number has been found, go to the end
+	move $t0, $a0		#initialize $t0 to Head	
+
+list_search_loop:
+	lw $t1, ($t0)						#store the number in the current node in $t1
+	li $t2, -1		
+	beq $t1, $a1, list_search_end		#if found, go to end
+	beq $t1, $t2, list_search_end		#if not found, the address of the last element(tail) is returned 
+	lw $t0 , 4($t0)						#if not found, load next number in $t0
+	j list_search_loop
+
+list_search_end:
+	move $v0, $t0 
+	jr $ra
+
+
+#list_print function that gives the head of the list in $a0
+.text
+list_print:
+	move $t0, $a0		#store the Head in $t0
+	la $a0, print_newline
+	li $v0, 4
+	syscall				#print a newline
+
+list_print_loop:
+	li $t1, -1
+	lw $t2, ($t0)
+	beq $t1, $t2, list_print_end	#if the list ends
+	move $a0, $t2
+	li $v0, 1		
+	syscall			#print output number
+	la $a0, space	
+	li $v0, 4
+	syscall			#give whitespace
+	lw $t0, 4($t0)
+	j list_print_loop		
+
+list_print_end:
+	la $a0, print_newline
+	li $v0, 4
+	syscall			#print newline
+	jr $ra			#return control back
 
 
 
 .data
 info_msg: .asciiz "This assembly program multiplies two numbers \nThe input format is as specified in the question\n"
-nl_msg: .asciiz "\n"
-space_msg: .asciiz " "
+print_newline: .asciiz "\n"
+space: .asciiz " "
