@@ -126,12 +126,12 @@ multiply:
 		move  $s2, $a1
 		lw    $t1, ($s2)
 		beq   $t0, $t1, multiply_end				# if b empty, then return HEAD of b 
-	# create the output list
-		jal   list_create		          			# create the output list
-		move  $s2, $v0		            			# save the o/p HEAD in $s2
+	# create the output list and store output head in $s2
+		jal   list_create
+		move  $s2, $v0
+	# Initializations
 		move  $s3, $s1		            			# current node in multiplier
-                                # initialized to HEAD of b
-	li    $s4, 0                  # current node in o/p initialized to its HEAD
+		li    $s4, 0                  				# initialize count to 0
 
 # Creating the O/P List (Raw)
 multiply_loop:
