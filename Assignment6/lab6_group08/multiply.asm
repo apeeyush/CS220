@@ -133,14 +133,15 @@ multiply:
 		move  $s3, $s1		            			# current node in multiplier
 		li    $s4, 0                  				# initialize count to 0
 
-# Creating the O/P List (Raw)
+# Creating the output list
 multiply_loop:
 	lw    $t1, ($s3)
 	li    $t2, -1
-	beq   $t1, $t2, multiply_fwd	# proceed as creation stage is complete
+	beq   $t1, $t2, multiply_format_start			# proceed as creation stage is complete
 
 	li    $t0, 0
-	move  $s7, $s2
+	move  $s7, $s2									# initialize current running node to HEAD of output
+
 multiply_loop_init:
 	bge   $t0, $s4, multiply_loop_escape
 	addi  $t0, $t0, 1		
@@ -216,7 +217,7 @@ multiply_subloop_break:
 # $t0 contains the current node
 # $t1 contains the carry
 
-multiply_fwd:
+multiply_format_start:
 	move  $t0, $s2
 
 multiply_format:
@@ -264,70 +265,56 @@ multiply_end:
 	jr    $ra
 
 	
-#----------------------------------------------------------------------
-# List function: 	list_reverse	
-# Arguments: 		HEAD ($a0)	
-# Return:		HEAD of reversed list ($v0)
+
+#list_reverse function that takes the Head in $a0 and returns the Head of the reversed list in $v0
 # Rountine called:	list_search
-# Routine type:		non-leaf
-# Stack Frame Sections:	Saved registers(3), return address(1) 
-#----------------------------------------------------------------------		
 
 .text
 list_reverse:
-	#start of prologue
-	addiu $sp, $sp, -16
-	sw $s0, ($sp)
-	sw $s1, 4($sp)
-	sw $s2, 8($sp)
-	sw $ra, 12($sp)
-	#end of prologue
 	
-# $s0 stores the HEAD of i/p list
-# $s1 stores the HEAD of the o/p list
-# $s2 points to the LAST node (NULl node) in the i/p list
-
-	move $s0, $a0		#save the HEAd of i/p
+	addiu $sp, $sp, -16
+	sw $s0, ($sp)	#store the Head of the input list
+	sw $s1, 4($sp)	#store the Head of the list to be returned
+	sw $s2, 8($sp)	#store the last NIL node of the list
+	sw $ra, 12($sp)
+	move $s0, $a0	#store the Head of the list 
 		
 	move $s1, $s0
 	li $t0, -1
-	lw $t1, ($s0)		#check if i/p is empty
-	beq $t0, $t1, list_reverse_epi	#return i/p if its is empty	
+	lw $t1, ($s0)	#if the list is empty
+	beq $t0, $t1, list_reverse_empty	#return if list if empty	
 
 	move $a0, $s0
 	li $a1, -1
 	jal list_search
-	move $s2, $v0		#save the addr of LAST node
+	move $s2, $v0		#save the address of the last node
 
-	# in the beginning od each iteration, every node- 
-	# before $t0 (including $t0) in i/p is reversed.
-	# $t0 contains the current node in i/p list
-	# $t2 contains the $t0.next
+#Loop Invariant for the following iterations: In the beginning, $t0 and all nodes before it are reversed
+#$t0 contains the current node in the given list, while $t2 contains the next node	
 	
-	
-	move $t0, $s0		#initialized to HEAD
-	lw $t2, 4($s0)		#initialize the next pointer to HEAD.next
-	sw $s2, 4($s0)		#link the input's HEAD to the last (NULL) node 
+	move $t0, $s0		#initialize to Head
+	lw $t2, 4($s0)		#initializ the next pointer to Head.next
+	sw $s2, 4($s0)		#link the Head of the original list to the last(NIL) node 
+
 list_reverse_loop:
-	beq $t2, $s2, list_reverse_end	#go to end sequence if next node is last
-	lw $t1, 4($t2)		#save the next node of $t2 in $t1
-	sw $t0, 4($t2)		#set the next node of the $t0.next to $t0
-	move $t0, $t2		#increment the node $t0
-	move $t2, $t1		#increment the node of $t2
+	beq $t2, $s2, list_reverse_end	#go if the next node is last
+	lw $t1, 4($t2)		#store the next node of $t2 in $t1
+	sw $t0, 4($t2)		#set the next node of $t0.next to $t0
+	move $t0, $t2		#increment $t0 node
+	move $t2, $t1		#increment $t2 node
 	j list_reverse_loop
 
-list_reverse_end:		#sequence when the job is completed
-	move $s1, $t0		#HEAD of the o/p is the second-last node in list
-list_reverse_epi:
+list_reverse_end:		
+	move $s1, $t0		#Head of the reversed list is the penultimate node in list
+
+list_reverse_empty:
 	move $v0, $s1
-	#start of epilogue
 	lw $s0, ($sp)	
 	lw $s1, 4($sp)
 	lw $s2, 8($sp)
 	lw $ra, 12($sp)
-	addiu $sp, $sp, 16
+	add $sp, $sp, 16
 	jr $ra
-	#end of epilogue
 
 #We have developed the necessary helper functions to create a modular design. They are given henceforth.
 
@@ -344,7 +331,7 @@ list_create:
 #list_add function that takes head and the number in $a0 and $a1 and appends the number at the last position
 .text
 list_add:
-	add $sp,$sp,-8
+	addi $sp,$sp,-8
 	sw $s0,($sp)
 	sw $ra,4($sp)
 
@@ -358,7 +345,7 @@ list_add:
 
 	lw $s0, ($sp)
 	lw $ra, 4($sp)
-	add $sp, $sp, 8
+	addi $sp, $sp, 8
 	jr $ra
 	
 		
