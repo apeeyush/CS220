@@ -37,7 +37,7 @@ module mkProc(Proc);
    Reg#(Data)     ir <- mkRegU;
    
    rule doFetch(cop.started && state == Fetch);
-      let inst = iMem.req(pc);
+      let inst <- dMem.req(MemReq{op: Ld, addr: pc, data: ?});
       $display("pc: %h inst: (%h) expanded: ", pc, inst, showInst(inst));
       // store the instruction in a register
       ir <= inst;

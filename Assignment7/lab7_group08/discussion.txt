@@ -42,6 +42,53 @@ Insts  =       6871
 PASSED
 
 
+
+--------------------------------------------------------------
+
+Compiling /users/course/cs220/Labs/LABHOME/programs/src/towers
+Running towers
+Cycles =      19814
+Insts  =       9907
+PASSED
+
+Compiling /users/course/cs220/Labs/LABHOME/programs/src/multiply
+Running multiply
+Cycles =      42196
+Insts  =      21098
+PASSED
+
+Compiling /users/course/cs220/Labs/LABHOME/programs/src/qsort
+Running qsort
+Cycles =      43252
+Insts  =      21626
+PASSED
+
+Compiling /users/course/cs220/Labs/LABHOME/programs/src/vvadd
+Running vvadd
+Cycles =       6036
+Insts  =       3018
+PASSED
+
+Compiling /users/course/cs220/Labs/LABHOME/programs/src/filters
+Running filters
+called sharpen
+exiting sharpen
+called sharpen
+exiting sharpen
+called sharpen
+exiting sharpen
+Cycles =     142450
+Insts  =      71225
+PASSED
+
+
+Compiling /users/course/cs220/Labs/LABHOME/programs/src/median
+Running median
+Cycles =      13742
+Insts  =       6871
+PASSED
+
+
 *** Number of Cycles for Benchmarks
 
 
