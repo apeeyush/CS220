@@ -131,7 +131,7 @@ function DecodedInst decode(Data inst);
       fcJR, fcJALR:
       begin
         dInst.iType = Jr;
-        dInst.dst  = funct == fcJR? Invalid: validReg(31);
+        dInst.dst  = funct == fcJR? Invalid: validReg(rd);
         dInst.src1 = validReg(rs);
         dInst.src2 = Invalid;
         dInst.imm  = Invalid;
