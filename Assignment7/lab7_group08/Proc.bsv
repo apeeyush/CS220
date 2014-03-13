@@ -36,13 +36,19 @@ module mkProc(Proc);
    Reg#(State) state <- mkReg(Fetch);
    Reg#(Data)     ir <- mkRegU;
    
-   rule doProc(cop.started);
-      // fetch stage
+   rule doFetch(cop.started && state == Fetch);
       let inst = iMem.req(pc);
-
       $display("pc: %h inst: (%h) expanded: ", pc, inst, showInst(inst));
+      // store the instruction in a register
+      ir <= inst;
+      // switch to execute state
+      state <= Execute;
+   endrule
 
+
+   rule doExecute(cop.started && state == Execute);
       // decode and execute stage
+      let inst = ir;
       let dInst = decode(inst);
       
       let rVal1 = rf.rd1(validRegValue(dInst.src1));
@@ -73,8 +79,12 @@ module mkProc(Proc);
       pc <= eInst.brTaken ? eInst.addr : pc + 4;
 
       cop.wr(eInst.dst, eInst.data);
+      // switch back to fetch
+      state <= Fetch;
    endrule
-  
+
+
+   
    method ActionValue#(Tuple2#(RIndx, Data)) cpuToHost;
       let ret <- cop.cpuToHost;
       return ret;
