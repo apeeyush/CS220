@@ -96,4 +96,4 @@ PASSED
 
 *** How can you make it better (fewer cycles per benchmark)? 
 
-
+It can be made better by implementing Pipelining. This will change the number of cycles per instructions from 2 to approximately 1.
