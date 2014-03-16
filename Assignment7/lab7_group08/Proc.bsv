@@ -39,7 +39,7 @@ module mkProc(Proc);
    rule doFetch(cop.started && state == Fetch);
       let inst <- dMem.req(MemReq{op: Ld, addr: pc, data: ?});
       $display("pc: %h inst: (%h) expanded: ", pc, inst, showInst(inst));
-      // store the instruction in a register
+      // store the instruction in register ir
       ir <= inst;
       // switch to execute state
       state <= Execute;
@@ -48,6 +48,7 @@ module mkProc(Proc);
 
    rule doExecute(cop.started && state == Execute);
       // decode and execute stage
+      // here we read ir and decode and execute the instruction
       let inst = ir;
       let dInst = decode(inst);
       

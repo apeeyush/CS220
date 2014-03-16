@@ -1,99 +1,42 @@
-Compiling /users/course/cs220/Labs/LABHOME/programs/src/towers
-Running towers
-Cycles =      19814
-Insts  =       9907
-PASSED
-
-Compiling /users/course/cs220/Labs/LABHOME/programs/src/multiply
-Running multiply
-Cycles =      42196
-Insts  =      21098
-PASSED
-
-Compiling /users/course/cs220/Labs/LABHOME/programs/src/qsort
-Running qsort
-Cycles =      43252
-Insts  =      21626
-PASSED
-
-Compiling /users/course/cs220/Labs/LABHOME/programs/src/vvadd
-Running vvadd
-Cycles =       6036
-Insts  =       3018
-PASSED
-
-Compiling /users/course/cs220/Labs/LABHOME/programs/src/filters
-Running filters
-called sharpen
-exiting sharpen
-called sharpen
-exiting sharpen
-called sharpen
-exiting sharpen
-Cycles =     142450
-Insts  =      71225
-PASSED
-
-
-Compiling /users/course/cs220/Labs/LABHOME/programs/src/median
-Running median
-Cycles =      13742
-Insts  =       6871
-PASSED
-
-
-
---------------------------------------------------------------
-
-Compiling /users/course/cs220/Labs/LABHOME/programs/src/towers
-Running towers
-Cycles =      19814
-Insts  =       9907
-PASSED
-
-Compiling /users/course/cs220/Labs/LABHOME/programs/src/multiply
-Running multiply
-Cycles =      42196
-Insts  =      21098
-PASSED
-
-Compiling /users/course/cs220/Labs/LABHOME/programs/src/qsort
-Running qsort
-Cycles =      43252
-Insts  =      21626
-PASSED
-
-Compiling /users/course/cs220/Labs/LABHOME/programs/src/vvadd
-Running vvadd
-Cycles =       6036
-Insts  =       3018
-PASSED
-
-Compiling /users/course/cs220/Labs/LABHOME/programs/src/filters
-Running filters
-called sharpen
-exiting sharpen
-called sharpen
-exiting sharpen
-called sharpen
-exiting sharpen
-Cycles =     142450
-Insts  =      71225
-PASSED
-
-
-Compiling /users/course/cs220/Labs/LABHOME/programs/src/median
-Running median
-Cycles =      13742
-Insts  =       6871
-PASSED
-
-
 *** Number of Cycles for Benchmarks
 
+
+After dividing doProc to doFetch and doExecute, no. of cycle per instructions becomes 2 [2 cycle implementation], i.e. it gets doubled.
+
+----------------------------------------
+Running towers
+Cycles =      19814
+Insts  =       9907
+PASSED
+
+Running multiply
+Cycles =      42196
+Insts  =      21098
+PASSED
+
+Running qsort
+Cycles =      43252
+Insts  =      21626
+PASSED
+
+Running vvadd
+Cycles =       6036
+Insts  =       3018
+PASSED
+
+Running filters
+Cycles =     142450
+Insts  =      71225
+PASSED
+
+Running median
+Cycles =      13742
+Insts  =       6871
+PASSED
+---------------------------------------
 
 
 
 *** How can you make it better (fewer cycles per benchmark)? 
 
-It can be made better by implementing Pipelining. This will change the number of cycles per instructions from 2 to approximately 1.
+It can be made better by implementing Pipelining. This will increase the throughput and change the number of cycles per instructions from 2 to approximately 1.
