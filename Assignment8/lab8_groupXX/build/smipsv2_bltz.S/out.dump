@@ -1,0 +1,181 @@
+
+build/smipsv2_bltz.S/a.out:     file format elf32-bigmips
+
+Disassembly of section .text:
+
+00001000 <__start>:
+    1000:	27bdffe8 	addiu $sp,$sp,-24
+    1004:	afbf0010 	sw $ra,16($sp)
+    1008:	0c00042c 	jal 10b0 <main>
+    100c:	4082a800 	mtc0 $v0,$21
+    1010:	08000404 	j 1010 <__start+10>
+    1014:	00000000 	nop
+    1018:	00000000 	nop
+    101c:	00000000 	nop
+
+00001020 <printInt>:
+    1020:	40849000 	mtc0 $a0,$18
+    1024:	03e00008 	jr $ra
+    1028:	00000000 	nop
+
+0000102c <printChar>:
+    102c:	40849800 	mtc0 $a0,$19
+    1030:	03e00008 	jr $ra
+    1034:	00000000 	nop
+
+00001038 <printStr>:
+    1038:	27bdffe0 	addiu $sp,$sp,-32
+    103c:	afb00010 	sw $s0,16($sp)
+    1040:	00808021 	move $s0,$a0
+    1044:	afb20018 	sw $s2,24($sp)
+    1048:	24120018 	li $s2,24
+    104c:	afb10014 	sw $s1,20($sp)
+    1050:	241100ff 	li $s1,255
+    1054:	afbf001c 	sw $ra,28($sp)
+    1058:	8e020000 	lw $v0,0($s0)
+    105c:	32030003 	andi $v1,$s0,0x3
+    1060:	000318c0 	sll $v1,$v1,0x3
+    1064:	02431823 	subu $v1,$s2,$v1
+    1068:	00712004 	sllv $a0,$s1,$v1
+    106c:	00441024 	and $v0,$v0,$a0
+    1070:	00622006 	srlv $a0,$v0,$v1
+    1074:	10800003 	beqz $a0,1084 <printStr+4c>
+    1078:	0c00040b 	jal 102c <printChar>
+    107c:	26100001 	addiu $s0,$s0,1
+    1080:	08000416 	j 1058 <printStr+20>
+    1084:	8fbf001c 	lw $ra,28($sp)
+    1088:	8fb20018 	lw $s2,24($sp)
+    108c:	8fb10014 	lw $s1,20($sp)
+    1090:	8fb00010 	lw $s0,16($sp)
+    1094:	27bd0020 	addiu $sp,$sp,32
+    1098:	03e00008 	jr $ra
+    109c:	00000000 	nop
+
+000010a0 <getTime>:
+    10a0:	40025000 	mfc0 $v0,$10
+    10a4:	03e00008 	jr $ra
+
+000010a8 <getInsts>:
+    10a8:	40025800 	mfc0 $v0,$11
+    10ac:	03e00008 	jr $ra
+
+000010b0 <main>:
+    10b0:	241e0002 	li $s8,2
+    10b4:	2402ffff 	li $v0,-1
+    10b8:	04400002 	bltz $v0,10c4 <main+14>
+    10bc:	141e003b 	bne $zero,$s8,11ac <fail>
+    10c0:	141e0002 	bne $zero,$s8,10cc <test_3>
+    10c4:	0440fffe 	bltz $v0,10c0 <main+10>
+    10c8:	141e0038 	bne $zero,$s8,11ac <fail>
+
+000010cc <test_3>:
+    10cc:	241e0003 	li $s8,3
+    10d0:	2402fff6 	li $v0,-10
+    10d4:	04400002 	bltz $v0,10e0 <test_3+14>
+    10d8:	141e0034 	bne $zero,$s8,11ac <fail>
+    10dc:	141e0002 	bne $zero,$s8,10e8 <test_4>
+    10e0:	0440fffe 	bltz $v0,10dc <test_3+10>
+    10e4:	141e0031 	bne $zero,$s8,11ac <fail>
+
+000010e8 <test_4>:
+    10e8:	241e0004 	li $s8,4
+    10ec:	24020000 	li $v0,0
+    10f0:	04400001 	bltz $v0,10f8 <test_4+10>
+    10f4:	141e0001 	bne $zero,$s8,10fc <test_4+14>
+    10f8:	141e002c 	bne $zero,$s8,11ac <fail>
+    10fc:	0440fffe 	bltz $v0,10f8 <test_4+10>
+
+00001100 <test_5>:
+    1100:	241e0005 	li $s8,5
+    1104:	24020001 	li $v0,1
+    1108:	04400001 	bltz $v0,1110 <test_5+10>
+    110c:	141e0001 	bne $zero,$s8,1114 <test_5+14>
+    1110:	141e0026 	bne $zero,$s8,11ac <fail>
+    1114:	0440fffe 	bltz $v0,1110 <test_5+10>
+
+00001118 <test_6>:
+    1118:	241e0006 	li $s8,6
+    111c:	24050000 	li $a1,0
+    1120:	24020001 	li $v0,1
+    1124:	04400021 	bltz $v0,11ac <fail>
+    1128:	24a50001 	addiu $a1,$a1,1
+    112c:	24060002 	li $a2,2
+    1130:	14a6fffb 	bne $a1,$a2,1120 <test_6+8>
+
+00001134 <test_7>:
+    1134:	241e0007 	li $s8,7
+    1138:	24050000 	li $a1,0
+    113c:	24020001 	li $v0,1
+    1140:	00000000 	nop
+    1144:	04400019 	bltz $v0,11ac <fail>
+    1148:	24a50001 	addiu $a1,$a1,1
+    114c:	24060002 	li $a2,2
+    1150:	14a6fffa 	bne $a1,$a2,113c <test_7+8>
+
+00001154 <test_8>:
+    1154:	241e0008 	li $s8,8
+    1158:	24050000 	li $a1,0
+    115c:	24020001 	li $v0,1
+    1160:	00000000 	nop
+    1164:	00000000 	nop
+    1168:	04400010 	bltz $v0,11ac <fail>
+    116c:	24a50001 	addiu $a1,$a1,1
+    1170:	24060002 	li $a2,2
+    1174:	14a6fff9 	bne $a1,$a2,115c <test_8+8>
+
+00001178 <test_9>:
+    1178:	24020001 	li $v0,1
+    117c:	2403ffff 	li $v1,-1
+    1180:	04600004 	bltz $v1,1194 <test_9+1c>
+    1184:	24420001 	addiu $v0,$v0,1
+    1188:	24420001 	addiu $v0,$v0,1
+    118c:	24420001 	addiu $v0,$v0,1
+    1190:	24420001 	addiu $v0,$v0,1
+    1194:	24420001 	addiu $v0,$v0,1
+    1198:	24420001 	addiu $v0,$v0,1
+    119c:	241d0003 	li $sp,3
+    11a0:	241e0009 	li $s8,9
+    11a4:	145d0001 	bne $v0,$sp,11ac <fail>
+    11a8:	141e0003 	bne $zero,$s8,11b8 <pass>
+
+000011ac <fail>:
+    11ac:	409ea800 	mtc0 $s8,$21
+    11b0:	1000ffff 	b 11b0 <fail+4>
+    11b4:	00000000 	nop
+
+000011b8 <pass>:
+    11b8:	4080a800 	mtc0 $zero,$21
+    11bc:	1000ffff 	b 11bc <pass+4>
+    11c0:	00000000 	nop
+    11c4:	00000000 	nop
+    11c8:	00000000 	nop
+    11cc:	00000000 	nop
+Disassembly of section .aibpointers:
+Disassembly of section .data:
+
+000011d0 <_fdata>:
+    11d0:	00000000 	nop
+    11d4:	00000001 	movf $zero,$zero,$fcc0
+    11d8:	00000002 	srl $zero,$zero,0x0
+    11dc:	00000003 	sra $zero,$zero,0x0
+    11e0:	00000004 	sllv $zero,$zero,$zero
+    11e4:	00000005 	selsl $zero,$zero,$zero
+    11e8:	00000006 	srlv $zero,$zero,$zero
+    11ec:	00000007 	srav $zero,$zero,$zero
+    11f0:	00000008 	jr $zero
+
+000011f4 <__testsentinel>:
+    11f4:	deadbeef 	ld $t5,-16657($s5)
+
+000011f8 <__teststatus>:
+    11f8:	00005804 	sllv $t3,$zero,$zero
+    11fc:	00000000 	nop
+Disassembly of section .reginfo:
+
+00001200 <.reginfo>:
+    1200:	e007007c 	sc $a3,124($zero)
+    1204:	00000000 	nop
+    1208:	00000000 	nop
+    120c:	00000000 	nop
+    1210:	00000000 	nop
+    1214:	000091f0 	tge $zero,$zero

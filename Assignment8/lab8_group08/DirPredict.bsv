@@ -74,28 +74,21 @@ module mkCounterPred2Bit(DirPred);
   method Bool predDir(Addr pc) if(inited);
     let idx = getIdx(pc);
     let tag = getTag(pc);
-    if(isValid(tags.sub(idx)))
-    begin 
-      if(validValue(tags.sub(idx)) == tag) 
+    if(validValue(tags.sub(idx)) == tag && isValid(tags.sub(idx)) ) 
+    begin
+      let temp = counters.sub(idx);
+      if(temp>1)
       begin
-        let temp = counters.sub(idx);
-        if(temp>1)
-        begin
-          return True;
-        end
-        else
-        begin
-          return False;
-        end
+        return True;
       end
-      else 
+      else
       begin
-        return False; 
+        return False;
       end
     end
-    else
+    else 
     begin
-      return False;
+      return True; 
     end
   endmethod
 
@@ -133,3 +126,164 @@ module mkCounterPred2Bit(DirPred);
     end
   endmethod
 endmodule
+/*
+(* synthesize *)
+module mkCounterPred3Bit(DirPred);
+  RegFile#(CounterPredIndex, Bit#(3)) counters <- mkRegFileFull;
+  RegFile#(CounterPredIndex, Maybe#(CounterPredTag)) tags <- mkRegFileFull;
+
+  Reg#(Bit#(TLog#(TAdd#(CounterPredEntries, 3)))) initialize <- mkReg(0);
+
+  Bool inited = truncateLSB(initialize) == 1'b1;
+
+  rule init(!inited);
+    counters.upd(truncate(initialize), 0);
+    initialize <= initialize + 1;
+  endrule
+
+  function CounterPredIndex getIdx(Addr pc) = truncate(pc >> 2);
+  function CounterPredTag getTag(Addr pc) = truncateLSB(pc);
+
+  method Bool predDir(Addr pc) if(inited);
+    let idx = getIdx(pc);
+    let tag = getTag(pc);
+    if(isValid(tags.sub(idx)))
+    begin 
+      if(validValue(tags.sub(idx)) == tag) 
+      begin
+        let temp = counters.sub(idx);
+        if(temp>3)
+        begin
+          return True;
+        end
+        else
+        begin
+          return False;
+        end
+      end
+      else 
+      begin
+        return False; 
+      end
+    end
+    else
+    begin
+      return False;
+    end
+  endmethod
+
+  method Action update(Redirect rd) if(inited);
+
+    if (rd.brType == Br)
+    begin
+      let idx = getIdx(rd.pc);
+      let tag = getTag(rd.pc);
+      Maybe#(CounterPredTag) temp = tagged Valid tag;
+
+  //if tag is not valid or (tag is valid and tag is not matching)
+      if(!isValid(tags.sub(idx)) || (isValid(tags.sub(idx)) && validValue(tags.sub(idx)) != tag ) )
+      begin
+        tags.upd(idx, temp);
+        if (rd.taken)
+        begin 
+          counters.upd(idx,4);
+        end
+        else
+        begin
+          counters.upd(idx,3);
+        end
+      end
+      else if(rd.mispredict)
+      begin 
+        if (counters.sub(idx)!=0) 
+          counters.upd(idx, counters.sub(idx)-1);
+      end
+      else 
+      begin
+        if (counters.sub(idx)!=7)
+          counters.upd(idx, counters.sub(idx)+1);
+      end
+    end
+  endmethod
+endmodule
+
+(* synthesize *)
+module mkCounterPred1Bit(DirPred);
+  RegFile#(CounterPredIndex, Bit#(1)) counters <- mkRegFileFull;
+  RegFile#(CounterPredIndex, Maybe#(CounterPredTag)) tags <- mkRegFileFull;
+
+  Reg#(Bit#(TLog#(TAdd#(CounterPredEntries, 1)))) initialize <- mkReg(0);
+
+  Bool inited = truncateLSB(initialize) == 1'b1;
+
+  rule init(!inited);
+    counters.upd(truncate(initialize), 0);
+    initialize <= initialize + 1;
+  endrule
+
+  function CounterPredIndex getIdx(Addr pc) = truncate(pc >> 2);
+  function CounterPredTag getTag(Addr pc) = truncateLSB(pc);
+
+  method Bool predDir(Addr pc) if(inited);
+    let idx = getIdx(pc);
+    let tag = getTag(pc);
+    if(isValid(tags.sub(idx)))
+    begin 
+      if(validValue(tags.sub(idx)) == tag) 
+      begin
+        let temp = counters.sub(idx);
+        if(temp == 1)
+        begin
+          return True;
+        end
+        else
+        begin
+          return False;
+        end
+      end
+      else 
+      begin
+        return False; 
+      end
+    end
+    else
+    begin
+      return False;
+    end
+  endmethod
+
+  method Action update(Redirect rd) if(inited);
+
+    if (rd.brType == Br)
+    begin
+      let idx = getIdx(rd.pc);
+      let tag = getTag(rd.pc);
+      Maybe#(CounterPredTag) temp = tagged Valid tag;
+
+  //if tag is not valid or (tag is valid and tag is not matching)
+      if(!isValid(tags.sub(idx)) || (isValid(tags.sub(idx)) && validValue(tags.sub(idx)) != tag ) )
+      begin
+        tags.upd(idx, temp);
+        if (rd.taken)
+        begin 
+          counters.upd(idx,1);
+        end
+        else
+        begin
+          counters.upd(idx,0);
+        end
+      end
+      else if(rd.mispredict)
+      begin 
+        if (counters.sub(idx)!=0) 
+          counters.upd(idx, counters.sub(idx)-1);
+      end
+      else 
+      begin
+        if (counters.sub(idx)!=1) 
+          counters.upd(idx, counters.sub(idx)+1);
+      end
+    end
+  endmethod
+endmodule
+*/

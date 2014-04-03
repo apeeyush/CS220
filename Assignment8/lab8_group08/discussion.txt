@@ -1,3 +1,225 @@
-Write your answers to the discussion questions asked in the lab handout in this file.
+Discussion 1
+
+Both 2 Bit Implementation and 3 Bit Implementation are almost equally efficient. They are better than 1 Bit Implementation, No Branch or One Branch Predictors.
+
+I have implemented all [i.e. 1 Bit, 2 Bit and 3 Bit Direction Predictor] however the code for 1 Bit and 3 Bit are commented out and the program executes 2 Bit implementation by default.
+
+2 Bit Implementation:
+Running towers
+Cycles =      17739
+Insts  =       9907
+Running multiply
+Cycles =      49461
+Insts  =      21098
+Running qsort
+Cycles =      55669
+Insts  =      21626
+Running vvadd
+Cycles =       5146
+Insts  =       3018
+Running filters
+Cycles =     144821
+Insts  =      71225
+Running median
+Cycles =      16017
+Insts  =       6871
+
+3 Bit Implementation:
+Running towers
+Cycles =      17778
+Insts  =       9907
+Running multiply
+Cycles =      48849
+Insts  =      21098
+Running qsort
+Cycles =      54309
+Insts  =      21626
+Running vvadd
+Cycles =       5149
+Insts  =       3018
+Running filters
+Cycles =     142697
+Insts  =      71225
+Running median
+Cycles =      16219
+Insts  =       6871
 
 -------------------------------------------------------------------------------------
+
+
+Discussion 2
+
+How much difference in cycle counts does having no branch predictors, one branch predictor, and two branch predictors have? Do you feel it’s significant?
+
+No Branch Predictors  : Always PC+4
+One Branch Predictor  : BTP Only
+Two Branch Predictors : BTP + Direction Predictor
+
+
+There is not much difference between No Branch Prediction and One Branch Prediction. However the number of cycles decreases very much once Two Branch Prediction is implemented. This is because the conditonal loops present in programs run multilple times. Since only Two Branch Prediction handles Direction Prediction efficiently [which is very important] hence Two Branch Predictors turn out to be much better than one branch predictor or no branch predictor.
+
+Data is presented below:
+-------------------
+No Branch Predictor
+Running towers
+Cycles =      19385
+Insts  =       9907
+PASSED
+Running multiply
+Cycles =      64395
+Insts  =      21098
+PASSED
+Running qsort
+Cycles =      56650
+Insts  =      21626
+PASSED
+Running vvadd
+Cycles =       6937
+Insts  =       3018
+PASSED
+Running filters
+Cycles =     221104
+Insts  =      71225
+PASSED
+Running median
+Cycles =      17343
+Insts  =       6871
+PASSED
+-------------------
+One Branch Predictor
+Running towers
+Cycles =      17496
+Insts  =       9907
+PASSED
+Running multiply
+Cycles =      70335
+Insts  =      21098
+PASSED
+Running qsort
+Cycles =      56335
+Insts  =      21626
+PASSED
+Running vvadd
+Cycles =       6937
+Insts  =       3018
+PASSED
+Running filters
+Cycles =     240315
+Insts  =      71225
+PASSED
+Running median
+Cycles =      17411
+Insts  =       6871
+PASSED
+-------------------
+Two Branch Prediction:
+Running towers
+Cycles =      17739
+Insts  =       9907
+PASSED
+Running multiply
+Cycles =      49461
+Insts  =      21098
+PASSED
+Running qsort
+Cycles =      55669
+Insts  =      21626
+PASSED
+Running vvadd
+Cycles =       5146
+Insts  =       3018
+PASSED
+Running filters
+Cycles =     144821
+Insts  =      71225
+PASSED
+Running median
+Cycles =      16017
+Insts  =       6871
+PASSED
+
+-------------------------------------------------------------------------------------
+
+Discussion 3
+
+For the branch target predictor, does the two bit implementation perform much better than the 1 bit implementation? How about a 3 bit implementation?
+
+Yes, the two bit implementation performs much better than the 1 bit implementation. However, the performance of 3 bit implementation is comparable to 2 bit implementation [there is not much difference]. The number of cycles are listed below:
+
+1 Bit Implementation:
+Running towers
+Cycles =      17694
+Insts  =       9907
+PASSED
+Running multiply
+Cycles =      56854
+Insts  =      21098
+PASSED
+Running qsort
+Cycles =      56080
+Insts  =      21626
+PASSED
+Running vvadd
+Cycles =       5149
+Insts  =       3018
+PASSED
+Running filters
+Cycles =     191556
+Insts  =      71225
+PASSED
+Running median
+Cycles =      16079
+Insts  =       6871
+PASSED
+
+2 Bit Implementation:
+Running towers
+Cycles =      17739
+Insts  =       9907
+PASSED
+Running multiply
+Cycles =      49461
+Insts  =      21098
+PASSED
+Running qsort
+Cycles =      55669
+Insts  =      21626
+PASSED
+Running vvadd
+Cycles =       5146
+Insts  =       3018
+PASSED
+Running filters
+Cycles =     144821
+Insts  =      71225
+PASSED
+Running median
+Cycles =      16017
+Insts  =       6871
+PASSED
+
+3 Bit Implementation:
+Running towers
+Cycles =      17778
+Insts  =       9907
+PASSED
+Running multiply
+Cycles =      48849
+Insts  =      21098
+PASSED
+Running qsort
+Cycles =      54309
+Insts  =      21626
+PASSED
+Running vvadd
+Cycles =       5149
+Insts  =       3018
+PASSED
+Running filters
+Cycles =     142697
+Insts  =      71225
+PASSED
+Running median
+Cycles =      16219
+Insts  =       6871
+PASSED

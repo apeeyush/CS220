@@ -1,0 +1,163 @@
+
+build/smipsv1_sw.S/a.out:     file format elf32-bigmips
+
+Disassembly of section .text:
+
+00001000 <__start>:
+    1000:	27bdffe8 	addiu $sp,$sp,-24
+    1004:	afbf0010 	sw $ra,16($sp)
+    1008:	0c00042c 	jal 10b0 <main>
+    100c:	4082a800 	mtc0 $v0,$21
+    1010:	08000404 	j 1010 <__start+10>
+    1014:	00000000 	nop
+    1018:	00000000 	nop
+    101c:	00000000 	nop
+
+00001020 <printInt>:
+    1020:	40849000 	mtc0 $a0,$18
+    1024:	03e00008 	jr $ra
+    1028:	00000000 	nop
+
+0000102c <printChar>:
+    102c:	40849800 	mtc0 $a0,$19
+    1030:	03e00008 	jr $ra
+    1034:	00000000 	nop
+
+00001038 <printStr>:
+    1038:	27bdffe0 	addiu $sp,$sp,-32
+    103c:	afb00010 	sw $s0,16($sp)
+    1040:	00808021 	move $s0,$a0
+    1044:	afb20018 	sw $s2,24($sp)
+    1048:	24120018 	li $s2,24
+    104c:	afb10014 	sw $s1,20($sp)
+    1050:	241100ff 	li $s1,255
+    1054:	afbf001c 	sw $ra,28($sp)
+    1058:	8e020000 	lw $v0,0($s0)
+    105c:	32030003 	andi $v1,$s0,0x3
+    1060:	000318c0 	sll $v1,$v1,0x3
+    1064:	02431823 	subu $v1,$s2,$v1
+    1068:	00712004 	sllv $a0,$s1,$v1
+    106c:	00441024 	and $v0,$v0,$a0
+    1070:	00622006 	srlv $a0,$v0,$v1
+    1074:	10800003 	beqz $a0,1084 <printStr+4c>
+    1078:	0c00040b 	jal 102c <printChar>
+    107c:	26100001 	addiu $s0,$s0,1
+    1080:	08000416 	j 1058 <printStr+20>
+    1084:	8fbf001c 	lw $ra,28($sp)
+    1088:	8fb20018 	lw $s2,24($sp)
+    108c:	8fb10014 	lw $s1,20($sp)
+    1090:	8fb00010 	lw $s0,16($sp)
+    1094:	27bd0020 	addiu $sp,$sp,32
+    1098:	03e00008 	jr $ra
+    109c:	00000000 	nop
+
+000010a0 <getTime>:
+    10a0:	40025000 	mfc0 $v0,$10
+    10a4:	03e00008 	jr $ra
+
+000010a8 <getInsts>:
+    10a8:	40025800 	mfc0 $v0,$11
+    10ac:	03e00008 	jr $ra
+
+000010b0 <main>:
+    10b0:	24021184 	li $v0,4484
+    10b4:	240300ff 	li $v1,255
+    10b8:	ac430000 	sw $v1,0($v0)
+    10bc:	8c440000 	lw $a0,0($v0)
+    10c0:	1483001f 	bne $a0,$v1,1140 <fail>
+    10c4:	24037f00 	li $v1,32512
+    10c8:	ac430004 	sw $v1,4($v0)
+    10cc:	8c440004 	lw $a0,4($v0)
+    10d0:	1483001b 	bne $a0,$v1,1140 <fail>
+    10d4:	24030ff0 	li $v1,4080
+    10d8:	ac430008 	sw $v1,8($v0)
+    10dc:	8c440008 	lw $a0,8($v0)
+    10e0:	14830017 	bne $a0,$v1,1140 <fail>
+    10e4:	2403700f 	li $v1,28687
+    10e8:	ac43000c 	sw $v1,12($v0)
+    10ec:	8c44000c 	lw $a0,12($v0)
+    10f0:	14830013 	bne $a0,$v1,1140 <fail>
+    10f4:	240211a0 	li $v0,4512
+    10f8:	240300ff 	li $v1,255
+    10fc:	ac43fff4 	sw $v1,-12($v0)
+    1100:	8c44fff4 	lw $a0,-12($v0)
+    1104:	1483000e 	bne $a0,$v1,1140 <fail>
+    1108:	24037f00 	li $v1,32512
+    110c:	ac43fff8 	sw $v1,-8($v0)
+    1110:	8c44fff8 	lw $a0,-8($v0)
+    1114:	1483000a 	bne $a0,$v1,1140 <fail>
+    1118:	24030ff0 	li $v1,4080
+    111c:	ac43fffc 	sw $v1,-4($v0)
+    1120:	8c44fffc 	lw $a0,-4($v0)
+    1124:	14830006 	bne $a0,$v1,1140 <fail>
+    1128:	2403700f 	li $v1,28687
+    112c:	ac430000 	sw $v1,0($v0)
+    1130:	8c440000 	lw $a0,0($v0)
+    1134:	14830002 	bne $a0,$v1,1140 <fail>
+    1138:	24020001 	li $v0,1
+    113c:	14020003 	bne $zero,$v0,114c <pass>
+
+00001140 <fail>:
+    1140:	24020001 	li $v0,1
+    1144:	4082a800 	mtc0 $v0,$21
+    1148:	1000ffff 	b 1148 <fail+8>
+
+0000114c <pass>:
+    114c:	4080a800 	mtc0 $zero,$21
+    1150:	1000ffff 	b 1150 <pass+4>
+    1154:	00000000 	nop
+    1158:	00000000 	nop
+    115c:	00000000 	nop
+Disassembly of section .aibpointers:
+Disassembly of section .data:
+
+00001160 <_fdata>:
+    1160:	00000000 	nop
+    1164:	00000001 	movf $zero,$zero,$fcc0
+    1168:	00000002 	srl $zero,$zero,0x0
+    116c:	00000003 	sra $zero,$zero,0x0
+    1170:	00000004 	sllv $zero,$zero,$zero
+    1174:	00000005 	selsl $zero,$zero,$zero
+    1178:	00000006 	srlv $zero,$zero,$zero
+    117c:	00000007 	srav $zero,$zero,$zero
+    1180:	00000008 	jr $zero
+
+00001184 <tdat>:
+    1184:	deadbeef 	ld $t5,-16657($s5)
+
+00001188 <tdat2>:
+    1188:	deadbeef 	ld $t5,-16657($s5)
+
+0000118c <tdat3>:
+    118c:	deadbeef 	ld $t5,-16657($s5)
+
+00001190 <tdat4>:
+    1190:	deadbeef 	ld $t5,-16657($s5)
+
+00001194 <tdat5>:
+    1194:	deadbeef 	ld $t5,-16657($s5)
+
+00001198 <tdat6>:
+    1198:	deadbeef 	ld $t5,-16657($s5)
+
+0000119c <tdat7>:
+    119c:	deadbeef 	ld $t5,-16657($s5)
+
+000011a0 <tdat8>:
+    11a0:	deadbeef 	ld $t5,-16657($s5)
+
+000011a4 <__testsentinel>:
+    11a4:	deadbeef 	ld $t5,-16657($s5)
+
+000011a8 <__teststatus>:
+    11a8:	00005804 	sllv $t3,$zero,$zero
+    11ac:	00000000 	nop
+Disassembly of section .reginfo:
+
+000011b0 <.reginfo>:
+    11b0:	a007001c 	sb $a3,28($zero)
+    11b4:	00000000 	nop
+    11b8:	00000000 	nop
+    11bc:	00000000 	nop
+    11c0:	00000000 	nop
+    11c4:	000091a0 	0x91a0
